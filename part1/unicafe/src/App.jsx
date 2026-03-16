@@ -11,7 +11,10 @@ const Statistics = ({stats}) => {
     <p>
       good {stats.good} <br />
       neutral {stats.neutral} <br />
-      bad {stats.bad}
+      bad {stats.bad} <br />
+      all {stats.total} <br />
+      average {stats.average} <br />
+      positive {stats.positivePercent} %
     </p>
   )
 }
@@ -28,7 +31,12 @@ const App = () => {
   const [neutral, setNeutral] = useState(0)
   const [bad, setBad] = useState(0)
 
-  const stats = {good, neutral, bad}
+  const points = good - bad;
+  const total = good + neutral + bad;
+  const average = points / total;
+  const positivePercent = (good / total) * 100;
+
+  const stats = {good, neutral, bad, total, average, positivePercent}
 
   function handleClickGood() {
     setGood(good + 1);  
