@@ -7,6 +7,14 @@ const Header = ({text}) => {
 }
 
 const Statistics = ({stats}) => {
+
+  if (stats.total === 0) {
+    return (
+      <p>
+        No feedback given
+      </p>
+    )
+  }
   return (
     <p>
       good {stats.good} <br />
