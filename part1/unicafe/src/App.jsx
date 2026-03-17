@@ -16,22 +16,25 @@ const Statistics = ({stats}) => {
     )
   }
   return (
-    <div>
-      <StatisticLine text="good" value={stats.good} />
-      <StatisticLine text="neutral" value={stats.neutral} />
-      <StatisticLine text="bad" value={stats.bad} />
-      <StatisticLine text="all" value={stats.total} />
-      <StatisticLine text="average" value={stats.average} />
-      <StatisticLine text="positive" value={stats.positivePercent} symbol="%" />
-    </div>
+    <table>
+      <tbody>
+        <StatisticRow text="good" value={stats.good} />
+        <StatisticRow text="neutral" value={stats.neutral} />
+        <StatisticRow text="bad" value={stats.bad} />
+        <StatisticRow text="all" value={stats.total} />
+        <StatisticRow text="average" value={stats.average} />
+        <StatisticRow text="positive" value={stats.positivePercent} symbol="%" />
+        </tbody>
+    </table>
   )
 }
 
-const StatisticLine = ({text, value, symbol}) => {
+const StatisticRow = ({text, value, symbol}) => {
   return (
-    <>
-      {text} {value} {symbol} <br />
-    </>
+    <tr>
+      <td>{text}</td> 
+      <td>{value} {symbol}</td>
+    </tr>
   )
 }
 
