@@ -16,14 +16,22 @@ const Statistics = ({stats}) => {
     )
   }
   return (
-    <p>
-      good {stats.good} <br />
-      neutral {stats.neutral} <br />
-      bad {stats.bad} <br />
-      all {stats.total} <br />
-      average {stats.average} <br />
-      positive {stats.positivePercent} %
-    </p>
+    <div>
+      <StatisticLine text="good" value={stats.good} />
+      <StatisticLine text="neutral" value={stats.neutral} />
+      <StatisticLine text="bad" value={stats.bad} />
+      <StatisticLine text="all" value={stats.total} />
+      <StatisticLine text="average" value={stats.average} />
+      <StatisticLine text="positive" value={stats.positivePercent} symbol="%" />
+    </div>
+  )
+}
+
+const StatisticLine = ({text, value, symbol}) => {
+  return (
+    <>
+      {text} {value} {symbol} <br />
+    </>
   )
 }
 
