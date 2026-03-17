@@ -1,5 +1,11 @@
 import { useState } from 'react'
 
+const Button = ({text, onClick}) => {
+  return (
+    <button onClick={onClick}>{text}</button>
+  )
+}
+
 const App = () => {
   const anecdotes = [
     'If it hurts, do it more often.',
@@ -11,7 +17,9 @@ const App = () => {
     'Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when diagnosing patients.',
     'The only way to go fast, is to go well.'
   ]
-   
+
+  const initialVotes = new Array(anecdotes.length).fill(0);
+  const [votes, setVotes] = useState([...initialVotes])
   const [selected, setSelected] = useState(0)
 
   function handleNextAnecdote() {
@@ -19,10 +27,18 @@ const App = () => {
     setSelected(index);
   }
 
+  function handleVote() {
+    const copy = [...votes];
+    copy[selected] += 1;
+    setVotes(copy);
+  }
+
   return (
     <div>
-      <p>{anecdotes[selected]}</p> 
-      <button onClick={handleNextAnecdote}>next anecdote</button>
+      <p>{anecdotes[selected]}</p>
+      <p>has {votes[selected]} votes</p>
+      <Button onClick={handleVote} text="vote" />
+      <Button onClick={handleNextAnecdote} text="next anecdote" />
     </div>
   )
 }
