@@ -1,11 +1,31 @@
 import { useState } from 'react'
 
-const PersonList = ({filteredPersons}) => {
-  console.log(filteredPersons);
-  
+const Filter = ({searchName, onChange}) => {
+  return(
+    <div>
+      Search for specific names: <input value={searchName} onChange={onChange} />
+    </div>
+  )
+}
+
+const PersonForm = ({newPerson, onNameChange, onNumberChange, onSubmit}) => {
+  return (
+    <form onSubmit={onSubmit}>
+        <div>
+          name: <input value={newPerson.name} onChange={onNameChange}/> <br />
+          number: <input value={newPerson.number} onChange={onNumberChange}/>
+        </div>
+        <div>
+          <button type="submit">add</button>
+        </div>
+      </form>
+  )
+}
+
+const PersonList = ({persons}) => {
   return(
     <>
-      {filteredPersons.map((person) => <Person key={person.name} person={person} />)}
+      {persons.map((person) => <Person key={person.name} person={person} />)}
     </>
   )
 }
@@ -64,19 +84,11 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      Search for specific names: <input value={searchName} onChange={handleSearchChange} />
-      <h2>Add new person</h2>
-      <form onSubmit={addPerson}>
-        <div>
-          name: <input value={newPerson.name} onChange={handleNameChange}/> <br />
-          number: <input value={newPerson.number} onChange={handleNumberChange}/>
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
-      <h2>Numbers</h2>
-      <PersonList filteredPersons={persons.filter((person) => person.name.toLowerCase().includes(searchName.toLowerCase()))} />
+      <Filter searchName={searchName} onChange={handleSearchChange} />
+      <h3>Add new person</h3>
+      <PersonForm onSubmit={addPerson} newPerson={newPerson} onNameChange={handleNameChange} onNumberChange={handleNumberChange}/>
+      <h3>Numbers</h3>
+      <PersonList persons={persons.filter((person) => person.name.toLowerCase().includes(searchName.toLowerCase()))} />
     </div>
   )
 }
