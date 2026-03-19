@@ -29,6 +29,11 @@
       "id": "2dce",
       "name": "Alcachofus Maximus",
       "number": "777"
+    },
+    {
+      "id": "7a5c",
+      "name": "Lux",
+      "number": "9"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

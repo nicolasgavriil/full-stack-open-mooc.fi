@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
 import PersonList from './components/PersonList.jsx'
 import PersonForm from './components/PersonForm.jsx'
 import Filter from './components/Filter.jsx'
+import personService from './services/persons.js'
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -11,7 +11,7 @@ const App = () => {
     const fetchPersons = async() => {
       console.log("Fetch persons from json server");
       try {
-        const response = await axios.get('http://localhost:3001/persons');
+        const response = await personService.getAll();
         setPersons(response.data);
       } catch (err) {
         console.error(err);
@@ -42,7 +42,7 @@ const App = () => {
 
     const savePerson = async () => {
       try {
-        const response = await axios.post('http://localhost:3001/persons', newPerson);
+        const response = await personService.create(newPerson);
         setPersons(persons.concat(response.data));
         setNewPerson(blankPerson);
       } catch (err) {
