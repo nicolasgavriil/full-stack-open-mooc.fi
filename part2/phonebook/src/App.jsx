@@ -1,44 +1,8 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
-
-
-const Filter = ({searchName, onChange}) => {
-  return(
-    <div>
-      Search for specific names: <input value={searchName} onChange={onChange} />
-    </div>
-  )
-}
-
-const PersonForm = ({newPerson, onNameChange, onNumberChange, onSubmit}) => {
-  return (
-    <form onSubmit={onSubmit}>
-        <div>
-          name: <input value={newPerson.name} onChange={onNameChange}/> <br />
-          number: <input value={newPerson.number} onChange={onNumberChange}/>
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
-  )
-}
-
-const PersonList = ({persons}) => {
-  return(
-    <>
-      {persons.map((person) => <Person key={person.name} person={person} />)}
-    </>
-  )
-}
-
-const Person = ({person}) => {
-  return(
-    <>
-      {person.name} {person.number} <br />
-    </>
-  )
-}
+import PersonList from './components/PersonList.jsx'
+import PersonForm from './components/PersonForm.jsx'
+import Filter from './components/Filter.jsx'
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -53,7 +17,7 @@ const App = () => {
         console.error(err);
       }
     }
-    
+
     fetchPersons();
   }, [])
 
@@ -76,8 +40,17 @@ const App = () => {
       return;
     }
 
-    setPersons(persons.concat(newPerson));
-    setNewPerson(blankPerson);
+    const savePerson = async () => {
+      try {
+        const response = await axios.post('http://localhost:3001/persons', newPerson);
+        setPersons(persons.concat(response.data));
+        setNewPerson(blankPerson);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+    
+    savePerson(); 
   }
 
   const handleSearchChange = (event) => {
