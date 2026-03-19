@@ -9,7 +9,6 @@ const App = () => {
 
   useEffect(() => {
     const fetchPersons = async() => {
-      console.log("Fetch persons from json server");
       try {
         const response = await personService.getAll();
         setPersons(response.data);
@@ -28,15 +27,15 @@ const App = () => {
   const [newPerson, setNewPerson] = useState(blankPerson);
   const [searchName, setSearchName] = useState('');
 
-  const nameExists = () => {
-    return persons.some((person) => person.name === newPerson.name)
-  }
-
   const addPerson = (event) => {
     event.preventDefault();
+    const message = `${newPerson.name} is already added to phonebook, replace the old number with new one?`;
 
-    if (nameExists()) {
-      window.alert(`${newPerson.name} is already added to phonebook`);
+    const existingPerson = persons.find((p) => p.name === newPerson.name);
+
+    if (existingPerson && window.confirm(message)) {
+      const updatedPerson = {...existingPerson, number: newPerson.number};
+      replaceNumber(updatedPerson);
       return;
     }
 
@@ -51,6 +50,16 @@ const App = () => {
     }
     
     createPerson(); 
+  }
+
+  const replaceNumber = async (updatedPerson) => {
+    try {
+      const response = await personService.update(updatedPerson);
+      setPersons(persons.map((p) => p.id !== updatedPerson.id ? p : response.data));
+    } catch (err) {
+      console.error(err);
+    }
+    
   }
 
   const deletePerson = async (personToDelete) => {
