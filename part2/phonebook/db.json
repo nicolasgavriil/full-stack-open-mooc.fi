@@ -19,21 +19,6 @@
       "name": "Mary Poppendieck",
       "number": "39-23-6423122",
       "id": "4"
-    },
-    {
-      "id": "1689",
-      "name": "Pepito",
-      "number": "1234"
-    },
-    {
-      "id": "2dce",
-      "name": "Alcachofus Maximus",
-      "number": "777"
-    },
-    {
-      "id": "7a5c",
-      "name": "Lux",
-      "number": "9"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

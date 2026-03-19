@@ -40,7 +40,7 @@ const App = () => {
       return;
     }
 
-    const savePerson = async () => {
+    const createPerson = async () => {
       try {
         const response = await personService.create(newPerson);
         setPersons(persons.concat(response.data));
@@ -50,7 +50,20 @@ const App = () => {
       }
     }
     
-    savePerson(); 
+    createPerson(); 
+  }
+
+  const deletePerson = async (personToDelete) => {
+    
+    if (!window.confirm(`Delete ${personToDelete.name} ?`)) {
+      return;
+    }
+    try {
+      await personService.remove(personToDelete.id);
+      setPersons(persons.filter((person) => person.id !== personToDelete.id));
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   const handleSearchChange = (event) => {
@@ -73,7 +86,7 @@ const App = () => {
       <h3>Add new person</h3>
       <PersonForm onSubmit={addPerson} newPerson={newPerson} onNameChange={handleNameChange} onNumberChange={handleNumberChange}/>
       <h3>Numbers</h3>
-      <PersonList persons={persons.filter((person) => person.name.toLowerCase().includes(searchName.toLowerCase()))} />
+      <PersonList persons={persons.filter((person) => person.name.toLowerCase().includes(searchName.toLowerCase()))} onClick={deletePerson} />
     </div>
   )
 }
