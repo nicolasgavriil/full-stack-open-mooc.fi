@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import PersonList from './components/PersonList.jsx'
 import PersonForm from './components/PersonForm.jsx'
 import Filter from './components/Filter.jsx'
+import Notification from './components/Notification.jsx'
 import personService from './services/persons.js'
 
 const App = () => {
@@ -26,6 +27,13 @@ const App = () => {
   }
   const [newPerson, setNewPerson] = useState(blankPerson);
   const [searchName, setSearchName] = useState('');
+  const [notificationMessage, setNotificationMessage] = useState();
+
+  useEffect(() => {
+    setTimeout(() => {
+        setNotificationMessage(null);
+      }, 5000)
+  }, [notificationMessage])
 
   const addPerson = (event) => {
     event.preventDefault();
@@ -42,8 +50,10 @@ const App = () => {
     const createPerson = async () => {
       try {
         const response = await personService.create(newPerson);
-        setPersons(persons.concat(response.data));
+        const createdPerson = response.data;
+        setPersons(persons.concat(createdPerson));
         setNewPerson(blankPerson);
+        setNotificationMessage(`Successfully added ${createdPerson.name}`);
       } catch (err) {
         console.error(err);
       }
@@ -56,6 +66,7 @@ const App = () => {
     try {
       const response = await personService.update(updatedPerson);
       setPersons(persons.map((p) => p.id !== updatedPerson.id ? p : response.data));
+      setNotificationMessage(`Successfully updated ${updatedPerson.name}`);
     } catch (err) {
       console.error(err);
     }
@@ -68,8 +79,10 @@ const App = () => {
       return;
     }
     try {
-      await personService.remove(personToDelete.id);
-      setPersons(persons.filter((person) => person.id !== personToDelete.id));
+      const response = await personService.remove(personToDelete.id);
+      const deletedPerson = response.data;
+      setPersons(persons.filter((p) => p.id !== deletedPerson.id));
+      setNotificationMessage(`Successfully deleted ${deletedPerson.name}`)
     } catch (err) {
       console.error(err);
     }
@@ -91,11 +104,12 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={notificationMessage} />
       <Filter searchName={searchName} onChange={handleSearchChange} />
       <h3>Add new person</h3>
       <PersonForm onSubmit={addPerson} newPerson={newPerson} onNameChange={handleNameChange} onNumberChange={handleNumberChange}/>
       <h3>Numbers</h3>
-      <PersonList persons={persons.filter((person) => person.name.toLowerCase().includes(searchName.toLowerCase()))} onClick={deletePerson} />
+      <PersonList persons={persons.filter((p) => p.name.toLowerCase().includes(searchName.toLowerCase()))} onClick={deletePerson} />
     </div>
   )
 }
