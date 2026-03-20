@@ -6,18 +6,15 @@ const getAll = () => {
 };
 
 const create = (newPerson) => {
-  return axios.post("http://localhost:3001/persons", newPerson);
+  return axios.post(baseUrl, newPerson);
 };
 
 const update = (personToUpdate) => {
-  return axios.put(
-    `http://localhost:3001/persons/${personToUpdate.id}`,
-    personToUpdate,
-  );
+  return axios.put(`${baseUrl}/${personToUpdate.id}`, personToUpdate);
 };
 
 const remove = (id) => {
-  return axios.delete(`http://localhost:3001/persons/${id}`);
+  return axios.delete(`${baseUrl}/${id}`);
 };
 
 export default { getAll, create, update, remove };

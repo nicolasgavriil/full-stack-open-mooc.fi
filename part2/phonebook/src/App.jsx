@@ -30,6 +30,9 @@ const App = () => {
   const [notification, setNotification] = useState({});
 
   useEffect(() => {
+    if (!notification) {
+      return;
+    }
     setTimeout(() => {
         setNotification(null);
       }, 5000)
