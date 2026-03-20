@@ -27,13 +27,13 @@ const App = () => {
   }
   const [newPerson, setNewPerson] = useState(blankPerson);
   const [searchName, setSearchName] = useState('');
-  const [notificationMessage, setNotificationMessage] = useState();
+  const [notification, setNotification] = useState({});
 
   useEffect(() => {
     setTimeout(() => {
-        setNotificationMessage(null);
+        setNotification(null);
       }, 5000)
-  }, [notificationMessage])
+  }, [notification])
 
   const addPerson = (event) => {
     event.preventDefault();
@@ -53,7 +53,7 @@ const App = () => {
         const createdPerson = response.data;
         setPersons(persons.concat(createdPerson));
         setNewPerson(blankPerson);
-        setNotificationMessage(`Successfully added ${createdPerson.name}`);
+        setNotification({message: `Successfully added ${createdPerson.name}`, type: "success"});
       } catch (err) {
         console.error(err);
       }
@@ -66,9 +66,10 @@ const App = () => {
     try {
       const response = await personService.update(updatedPerson);
       setPersons(persons.map((p) => p.id !== updatedPerson.id ? p : response.data));
-      setNotificationMessage(`Successfully updated ${updatedPerson.name}`);
+      setNotification({message: `Successfully updated ${updatedPerson.name}`, type: "success"});
     } catch (err) {
       console.error(err);
+      setNotification({message: `Error: ${updatedPerson.name} is not on the phonebook anymore`, type: "error"})
     }
     
   }
@@ -82,9 +83,10 @@ const App = () => {
       const response = await personService.remove(personToDelete.id);
       const deletedPerson = response.data;
       setPersons(persons.filter((p) => p.id !== deletedPerson.id));
-      setNotificationMessage(`Successfully deleted ${deletedPerson.name}`)
+      setNotification({message: `Successfully deleted ${deletedPerson.name}`, type: "success"});
     } catch (err) {
       console.error(err);
+      setNotification({message: `Error: ${personToDelete.name} is not on the phonebook anymore`, type: "error"})
     }
   }
 
@@ -104,7 +106,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={notificationMessage} />
+      <Notification notification={notification} />
       <Filter searchName={searchName} onChange={handleSearchChange} />
       <h3>Add new person</h3>
       <PersonForm onSubmit={addPerson} newPerson={newPerson} onNameChange={handleNameChange} onNumberChange={handleNumberChange}/>
