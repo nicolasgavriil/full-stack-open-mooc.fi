@@ -25,6 +25,10 @@ function App() {
     setSearchQuery(event.target.value)
   }
 
+  const handleShowCountry = (country) => {
+    setSearchQuery(country.name.common);
+  }
+
   const normalizedQuery = searchQuery.toLowerCase().trim()
 
   const matchingCountries =
@@ -57,7 +61,7 @@ function App() {
     <div>
       Search for countries: <input value={searchQuery} onChange={handleSearchChange} />
       <Notification notification={notification} />
-      <CountryList countries={countriesToList} />
+      <CountryList countries={countriesToList} onShowCountry={handleShowCountry} />
       <CountryData country={countryToShow} />
     </div>
   )
