@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import countryService from "./services/countries.js";
+import weatherService from "./services/weather.js";
 import Notification from './components/Notification.jsx';
 import CountryList from './components/CountryList.jsx';
 import CountryData from './components/CountryData.jsx';
@@ -7,6 +8,7 @@ import CountryData from './components/CountryData.jsx';
 function App() {
   const [searchQuery, setSearchQuery] = useState('');
   const [countries, setCountries] = useState([]);
+  const [weatherData, setWeatherData] = useState(null);
 
   useEffect(() => {
     const fetchCountries = async () => {
@@ -38,9 +40,10 @@ function App() {
           c.name.common.toLowerCase().includes(normalizedQuery)
         )
 
-  let notification = null
-  let countriesToList = []
-  let countryToShow = null
+  let notification = null;
+  let countriesToList = [];
+  const countryToShow =
+    matchingCountries.length === 1 ? matchingCountries[0] : null;
 
   if (normalizedQuery.length === 0) {
     notification = null
@@ -53,16 +56,34 @@ function App() {
     }
   } else if (matchingCountries.length > 1) {
     countriesToList = matchingCountries
-  } else {
-    countryToShow = matchingCountries[0]
   }
+
+  useEffect(() => {
+    if (!countryToShow) {
+      return;
+    }
+    const fetchWeatherData = async () => {
+      try {
+        const response = await weatherService.getCurrentWeather(countryToShow);
+        const weather = response.data;
+        const iconUrl = `https://openweathermap.org/payload/api/media/file/${weather.weather[0].icon}.png`;
+        setWeatherData({ weather, iconUrl });
+
+      } catch (err) {
+        console.error(err);
+        setWeatherData(null)
+      }
+    }
+
+    fetchWeatherData();
+  }, [countryToShow])
 
   return(
     <div>
       Search for countries: <input value={searchQuery} onChange={handleSearchChange} />
       <Notification notification={notification} />
       <CountryList countries={countriesToList} onShowCountry={handleShowCountry} />
-      <CountryData country={countryToShow} />
+      <CountryData country={countryToShow} weatherData={weatherData} />
     </div>
   )
 }
