@@ -39,6 +39,12 @@ app.get("/api/persons/:id", (req, res) => {
   return res.send(note);
 });
 
+app.delete("/api/persons/:id", (req, res) => {
+  const personId = req.params.id;
+  notes = notes.filter((note) => note.id !== personId);
+  return res.status(204).end();
+});
+
 app.get("/info", (req, res) => {
   const now = new Date();
   const body = `<p>Phonebook has info for ${notes.length} people</p><p>${now.toString()}</p>`;
