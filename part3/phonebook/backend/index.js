@@ -29,6 +29,16 @@ app.get("/api/persons", (req, res) => {
   res.send(notes);
 });
 
+app.get("/api/persons/:id", (req, res) => {
+  const personId = req.params.id;
+  const note = notes.find((note) => note.id === personId);
+  if (!note) {
+    return res.status(404).end();
+  }
+
+  return res.send(note);
+});
+
 app.get("/info", (req, res) => {
   const now = new Date();
   const body = `<p>Phonebook has info for ${notes.length} people</p><p>${now.toString()}</p>`;
