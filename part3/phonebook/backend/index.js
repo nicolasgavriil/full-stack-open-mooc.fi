@@ -1,6 +1,7 @@
 import express from "express";
 
 const app = express();
+app.use(express.json());
 
 let notes = [
   {
@@ -37,6 +38,24 @@ app.get("/api/persons/:id", (req, res) => {
   }
 
   return res.send(note);
+});
+
+app.post("/api/persons", (req, res) => {
+  const body = req.body;
+  console.log(body);
+  if (!body.name || !body.number) {
+    return res.status(400).json({
+      error: "Missing content",
+    });
+  }
+  const newId = String(Math.floor(Math.random() * 1000000000));
+  const note = {
+    id: newId,
+    name: body.name,
+    number: body.number,
+  };
+  notes = notes.concat(note);
+  res.status(201).json(note);
 });
 
 app.delete("/api/persons/:id", (req, res) => {
