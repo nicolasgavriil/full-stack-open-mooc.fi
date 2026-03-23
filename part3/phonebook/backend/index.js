@@ -3,6 +3,7 @@ import morgan from "morgan";
 
 const app = express();
 
+app.use(express.static("dist"));
 app.use(express.json());
 
 morgan.token("body", (req, res) => {
@@ -53,8 +54,8 @@ app.get("/api/persons/:id", (req, res) => {
 
 app.post("/api/persons", (req, res) => {
   const body = req.body;
-  console.log(body);
-  if (!body.name || !body.number) {
+
+  if (!body || !body.name || !body.number) {
     return res.status(400).json({
       error: "Missing content",
     });
