@@ -14,7 +14,7 @@ app.use(
   ),
 );
 
-let notes = [
+let persons = [
   {
     id: "1",
     name: "Arto Hellas",
@@ -33,22 +33,22 @@ let notes = [
   {
     id: "4",
     name: "Mary Poppendieck",
-    number: "39-23-6423122",
+    number: "99-23-6423122",
   },
 ];
 
 app.get("/api/persons", (req, res) => {
-  res.send(notes);
+  res.send(persons);
 });
 
 app.get("/api/persons/:id", (req, res) => {
   const personId = req.params.id;
-  const note = notes.find((note) => note.id === personId);
-  if (!note) {
+  const person = persons.find((p) => p.id === personId);
+  if (!person) {
     return res.status(404).end();
   }
 
-  return res.send(note);
+  return res.send(person);
 });
 
 app.post("/api/persons", (req, res) => {
@@ -59,31 +59,31 @@ app.post("/api/persons", (req, res) => {
       error: "Missing content",
     });
   }
-  if (notes.find((note) => note.name === body.name)) {
+  if (persons.find((p) => p.name === body.name)) {
     return res.status(400).json({
       error: "Name must be unique",
     });
   }
 
   const newId = String(Math.floor(Math.random() * 1000000000));
-  const note = {
+  const person = {
     id: newId,
     name: body.name,
     number: body.number,
   };
-  notes = notes.concat(note);
-  res.status(201).json(note);
+  persons = persons.concat(person);
+  res.status(201).json(person);
 });
 
 app.delete("/api/persons/:id", (req, res) => {
   const personId = req.params.id;
-  notes = notes.filter((note) => note.id !== personId);
+  persons = persons.filter((p) => p.id !== personId);
   return res.status(204).end();
 });
 
 app.get("/info", (req, res) => {
   const now = new Date();
-  const body = `<p>Phonebook has info for ${notes.length} people</p><p>${now.toString()}</p>`;
+  const body = `<p>Phonebook has info for ${persons.length} people</p><p>${now.toString()}</p>`;
   res.send(body);
 });
 
