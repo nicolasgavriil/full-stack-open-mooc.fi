@@ -2,8 +2,17 @@ import express from "express";
 import morgan from "morgan";
 
 const app = express();
+
 app.use(express.json());
-app.use(morgan("tiny"));
+
+morgan.token("body", (req, res) => {
+  return req.body ? JSON.stringify(req.body) : "Empty body";
+});
+app.use(
+  morgan(
+    ":method :url :status :res[content-length] - :response-time ms - :body",
+  ),
+);
 
 let notes = [
   {
