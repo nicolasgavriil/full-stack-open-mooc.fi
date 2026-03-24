@@ -28,12 +28,12 @@ app.get("/api/persons", async (req, res, next) => {
   }
 });
 
-app.get("/api/persons/:id", (req, res, next) => {
+app.get("/api/persons/:id", async (req, res, next) => {
   try {
     const personId = req.params.id;
-    const person = persons.find((p) => p.id === personId);
+    const person = await Person.findById(personId);
     if (!person) {
-      return res.status(404).end();
+      throw new AppError("Person not found", 404);
     }
     return res.send(person);
   } catch (err) {
