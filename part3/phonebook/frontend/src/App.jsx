@@ -59,6 +59,7 @@ const App = () => {
         setNotification({message: `Successfully added ${createdPerson.name}`, type: "success"});
       } catch (err) {
         console.error(err);
+        setNotification({message: err.response?.data?.error || "Something went wrong", type: "error"});
       }
     }
     

@@ -13,7 +13,7 @@ try {
 }
 
 const personSchema = new mongoose.Schema({
-  name: { type: String, required: true, unique: true },
+  name: { type: String, minLength: 5, required: true, unique: true },
   number: { type: String, required: true },
 });
 
