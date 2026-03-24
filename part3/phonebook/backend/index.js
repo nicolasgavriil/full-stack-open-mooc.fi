@@ -52,10 +52,14 @@ app.post("/api/persons", async (req, res) => {
   res.status(201).json(personAdded);
 });
 
-app.delete("/api/persons/:id", (req, res) => {
+app.delete("/api/persons/:id", async (req, res) => {
   const personId = req.params.id;
-  persons = persons.filter((p) => p.id !== personId);
-  return res.status(204).end();
+  try {
+    await Person.findByIdAndDelete(personId);
+    return res.status(204).end();
+  } catch (err) {
+    console.log(err);
+  }
 });
 
 app.get("/info", (req, res) => {
