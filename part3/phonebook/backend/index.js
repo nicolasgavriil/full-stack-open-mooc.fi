@@ -33,7 +33,7 @@ app.get("/api/persons/:id", (req, res) => {
   return res.send(person);
 });
 
-app.post("/api/persons", (req, res) => {
+app.post("/api/persons", async (req, res) => {
   const body = req.body;
 
   if (!body || !body.name || !body.number) {
@@ -41,20 +41,15 @@ app.post("/api/persons", (req, res) => {
       error: "Missing content",
     });
   }
-  if (persons.find((p) => p.name === body.name)) {
-    return res.status(400).json({
-      error: "Name must be unique",
-    });
-  }
 
-  const newId = String(Math.floor(Math.random() * 1000000000));
-  const person = {
-    id: newId,
+  const personToAdd = new Person({
     name: body.name,
     number: body.number,
-  };
-  persons = persons.concat(person);
-  res.status(201).json(person);
+  });
+
+  const personAdded = await personToAdd.save();
+
+  res.status(201).json(personAdded);
 });
 
 app.delete("/api/persons/:id", (req, res) => {
