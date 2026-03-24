@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import express from "express";
 import morgan from "morgan";
 import { Person } from "./models/person.js";
+import { AppError, errorHandler } from "./middleware/errors.js";
 
 const app = express();
 
@@ -18,55 +19,70 @@ app.use(
   ),
 );
 
-app.get("/api/persons", async (req, res) => {
-  const persons = await Person.find({});
-  res.send(persons);
-});
-
-app.get("/api/persons/:id", (req, res) => {
-  const personId = req.params.id;
-  const person = persons.find((p) => p.id === personId);
-  if (!person) {
-    return res.status(404).end();
+app.get("/api/persons", async (req, res, next) => {
+  try {
+    const persons = await Person.find({});
+    res.send(persons);
+  } catch (err) {
+    next(err);
   }
-
-  return res.send(person);
 });
 
-app.post("/api/persons", async (req, res) => {
-  const body = req.body;
+app.get("/api/persons/:id", (req, res, next) => {
+  try {
+    const personId = req.params.id;
+    const person = persons.find((p) => p.id === personId);
+    if (!person) {
+      return res.status(404).end();
+    }
+    return res.send(person);
+  } catch (err) {
+    next(err);
+  }
+});
 
-  if (!body || !body.name || !body.number) {
-    return res.status(400).json({
-      error: "Missing content",
+app.post("/api/persons", async (req, res, next) => {
+  try {
+    const body = req.body;
+
+    if (!body || !body.name || !body.number) {
+      throw new AppError("Missing content", 400);
+    }
+
+    const personToAdd = new Person({
+      name: body.name,
+      number: body.number,
     });
+
+    const personAdded = await personToAdd.save();
+
+    res.status(201).json(personAdded);
+  } catch (err) {
+    next(err);
   }
-
-  const personToAdd = new Person({
-    name: body.name,
-    number: body.number,
-  });
-
-  const personAdded = await personToAdd.save();
-
-  res.status(201).json(personAdded);
 });
 
-app.delete("/api/persons/:id", async (req, res) => {
+app.delete("/api/persons/:id", async (req, res, next) => {
   const personId = req.params.id;
   try {
     await Person.findByIdAndDelete(personId);
     return res.status(204).end();
   } catch (err) {
-    console.log(err);
+    next(err);
   }
 });
 
-app.get("/info", (req, res) => {
-  const now = new Date();
-  const body = `<p>Phonebook has info for ${persons.length} people</p><p>${now.toString()}</p>`;
-  res.send(body);
+app.get("/info", (req, res, next) => {
+  try {
+    const now = new Date();
+    const body = `<p>Phonebook has info for ${persons.length} people</p><p>${now.toString()}</p>`;
+    res.send(body);
+  } catch (err) {
+    next(err);
+  }
 });
+
+app.use(errorHandler);
 
 const PORT = process.env.PORT;
 app.listen(PORT, () => {
