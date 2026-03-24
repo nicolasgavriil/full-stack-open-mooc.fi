@@ -14,7 +14,15 @@ try {
 
 const personSchema = new mongoose.Schema({
   name: { type: String, minLength: 5, required: true, unique: true },
-  number: { type: String, required: true },
+  number: {
+    type: String,
+    validate: {
+      validator: (v) => /^\d{2,3}-\d{5,}$/.test(v),
+      message:
+        "Phone number must have 2–3 digits, a dash (-), then at least 6 digits (e.g. 09-1234567, 090-1234567)",
+    },
+    required: true,
+  },
 });
 
 personSchema.set("toJSON", {
