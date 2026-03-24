@@ -1,5 +1,8 @@
+import "dotenv/config";
+import mongoose from "mongoose";
 import express from "express";
 import morgan from "morgan";
+import { Person } from "./models/person.js";
 
 const app = express();
 
@@ -15,30 +18,8 @@ app.use(
   ),
 );
 
-let persons = [
-  {
-    id: "1",
-    name: "Arto Hellas",
-    number: "040-123456",
-  },
-  {
-    id: "2",
-    name: "Ada Lovelace",
-    number: "39-44-5323523",
-  },
-  {
-    id: "3",
-    name: "Dan Abramov",
-    number: "12-43-234345",
-  },
-  {
-    id: "4",
-    name: "Mary Poppendieck",
-    number: "99-23-6423122",
-  },
-];
-
-app.get("/api/persons", (req, res) => {
+app.get("/api/persons", async (req, res) => {
+  const persons = await Person.find({});
   res.send(persons);
 });
 
@@ -88,7 +69,7 @@ app.get("/info", (req, res) => {
   res.send(body);
 });
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
