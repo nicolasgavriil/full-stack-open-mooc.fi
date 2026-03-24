@@ -22,7 +22,7 @@ app.use(
 app.get("/api/persons", async (req, res, next) => {
   try {
     const persons = await Person.find({});
-    res.send(persons);
+    return res.send(persons);
   } catch (err) {
     next(err);
   }
@@ -54,9 +54,29 @@ app.post("/api/persons", async (req, res, next) => {
       number: body.number,
     });
 
-    const personAdded = await personToAdd.save();
+    const addedPerson = await personToAdd.save();
 
-    res.status(201).json(personAdded);
+    return res.status(201).json(addedPerson);
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.put("/api/persons/:id", async (req, res, next) => {
+  const personId = req.params.id;
+  const body = req.body;
+  if (!body || !body.name || !body.number) {
+    throw new AppError("Missing content", 400);
+  }
+  try {
+    const personToUpdate = await Person.findById(personId);
+    if (!personToUpdate) {
+      throw new AppError("Person not found", 404);
+    }
+    personToUpdate.name = body.name;
+    personToUpdate.number = body.number;
+    const updatedPerson = await personToUpdate.save();
+    return res.status(200).json(updatedPerson);
   } catch (err) {
     next(err);
   }
@@ -76,7 +96,7 @@ app.get("/info", (req, res, next) => {
   try {
     const now = new Date();
     const body = `<p>Phonebook has info for ${persons.length} people</p><p>${now.toString()}</p>`;
-    res.send(body);
+    return res.send(body);
   } catch (err) {
     next(err);
   }
