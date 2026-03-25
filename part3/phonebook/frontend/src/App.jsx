@@ -35,7 +35,7 @@ const App = () => {
     }
     setTimeout(() => {
         setNotification(null);
-      }, 5000)
+      }, 10000)
   }, [notification])
 
   const addPerson = (event) => {
@@ -73,7 +73,7 @@ const App = () => {
       setNotification({message: `Successfully updated ${updatedPerson.name}`, type: "success"});
     } catch (err) {
       console.error(err);
-      setNotification({message: `Error: ${updatedPerson.name} is not on the phonebook anymore`, type: "error"})
+      setNotification({message: err.response?.data?.error || "Something went wrong", type: "error"});
     }
     
   }
@@ -92,7 +92,7 @@ const App = () => {
       setNotification({message: `Successfully deleted ${personToDelete.name}`, type: "success"});
     } catch (err) {
       console.error(err);
-      setNotification({message: `Error: ${personToDelete.name} is not on the phonebook anymore`, type: "error"})
+      setNotification({message: err.response?.data?.error || "Something went wrong", type: "error"});
     }
   }
 
