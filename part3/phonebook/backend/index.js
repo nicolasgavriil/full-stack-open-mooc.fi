@@ -1,5 +1,4 @@
 import "dotenv/config";
-import mongoose from "mongoose";
 import express from "express";
 import morgan from "morgan";
 import { Person } from "./models/person.js";
@@ -92,8 +91,9 @@ app.delete("/api/persons/:id", async (req, res, next) => {
   }
 });
 
-app.get("/info", (req, res, next) => {
+app.get("/info", async (req, res, next) => {
   try {
+    const persons = await Person.find({});
     const now = new Date();
     const body = `<p>Phonebook has info for ${persons.length} people</p><p>${now.toString()}</p>`;
     return res.send(body);
