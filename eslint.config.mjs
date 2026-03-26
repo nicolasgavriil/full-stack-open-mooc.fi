@@ -32,6 +32,8 @@ export default defineConfig([
       "no-trailing-spaces": "error",
       "object-curly-spacing": ["error", "always"],
       "arrow-spacing": ["error", { before: true, after: true }],
+      "no-unused-vars": "off",
+      "no-undef": "error",
     },
   },
 
