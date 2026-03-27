@@ -83,19 +83,46 @@ describe("favorite blog", () => {
   const listWithOneBlog = [blogExamples[0]];
   test("list has only one blog", () => {
     const result = listHelper.favoriteBlog(listWithOneBlog);
-    assert.deepStrictEqual(result, listWithOneBlog[0]);
+    const expected = listWithOneBlog[0];
+    assert.deepStrictEqual(result, expected);
   });
 
   const listWithManyBlogs = blogExamples;
   test("list has many blogs", () => {
     const result = listHelper.favoriteBlog(listWithManyBlogs);
-    assert.deepStrictEqual(result, {
+    const expected = {
       _id: "5a422b3a1b54a676234d17f9",
       title: "Canonical string reduction",
       author: "Edsger W. Dijkstra",
       url: "http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html",
       likes: 12,
       __v: 0,
-    });
+    };
+    assert.deepStrictEqual(result, expected);
+  });
+});
+
+describe("author with most blogs", () => {
+  const emptyList = [];
+  test("list is empty", () => {
+    const result = listHelper.mostBlogs(emptyList);
+    assert.deepStrictEqual(result, null);
+  });
+
+  const listWithOneBlog = [blogExamples[0]];
+  test("list has only one blog", () => {
+    const result = listHelper.mostBlogs(listWithOneBlog);
+    const expected = { author: "Michael Chan", blogs: 1 };
+    assert.deepStrictEqual(result, expected);
+  });
+
+  const listWithManyBlogs = blogExamples;
+  test("list has many blogs", () => {
+    const result = listHelper.mostBlogs(listWithManyBlogs);
+    const expected = {
+      author: "Robert C. Martin",
+      blogs: 3,
+    };
+    assert.deepStrictEqual(result, expected);
   });
 });
