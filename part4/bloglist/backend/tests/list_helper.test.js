@@ -126,3 +126,28 @@ describe("author with most blogs", () => {
     assert.deepStrictEqual(result, expected);
   });
 });
+
+describe("author with most likes", () => {
+  const emptyList = [];
+  test("list is empty", () => {
+    const result = listHelper.mostLikes(emptyList);
+    assert.deepStrictEqual(result, null);
+  });
+
+  const listWithOneBlog = [blogExamples[0]];
+  test("list has only one blog", () => {
+    const result = listHelper.mostLikes(listWithOneBlog);
+    const expected = { author: "Michael Chan", likes: 7 };
+    assert.deepStrictEqual(result, expected);
+  });
+
+  const listWithManyBlogs = blogExamples;
+  test("list has many blogs", () => {
+    const result = listHelper.mostLikes(listWithManyBlogs);
+    const expected = {
+      author: "Edsger W. Dijkstra",
+      likes: 17,
+    };
+    assert.deepStrictEqual(result, expected);
+  });
+});
