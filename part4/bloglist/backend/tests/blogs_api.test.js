@@ -78,6 +78,20 @@ test("all blogs are returned", async () => {
   assert.strictEqual(response.body.length, 6);
 });
 
+test("blog has id property", async () => {
+  const response = await api.get("/api/blogs");
+  for (const blog of response.body) {
+    assert.ok(Object.hasOwn(blog, "id"), "Property id is missing");
+  }
+});
+
+test("blog does NOT have _id property", async () => {
+  const response = await api.get("/api/blogs");
+  for (const blog of response.body) {
+    assert.ok(!Object.hasOwn(blog, "_id"), "Property _id should not exist");
+  }
+});
+
 after(async () => {
   await mongoose.connection.close();
 });
