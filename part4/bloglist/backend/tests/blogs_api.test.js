@@ -74,22 +74,56 @@ test("blogs are returned as json", async () => {
 });
 
 test("all blogs are returned", async () => {
-  const response = await api.get("/api/blogs");
+  const response = await api
+    .get("/api/blogs")
+    .expect(200)
+    .expect("Content-Type", /application\/json/);
   assert.strictEqual(response.body.length, 6);
 });
 
 test("blog has id property", async () => {
-  const response = await api.get("/api/blogs");
+  const response = await api
+    .get("/api/blogs")
+    .expect(200)
+    .expect("Content-Type", /application\/json/);
   for (const blog of response.body) {
     assert.ok(Object.hasOwn(blog, "id"), "Property id is missing");
   }
 });
 
 test("blog does NOT have _id property", async () => {
-  const response = await api.get("/api/blogs");
+  const response = await api
+    .get("/api/blogs")
+    .expect(200)
+    .expect("Content-Type", /application\/json/);
   for (const blog of response.body) {
     assert.ok(!Object.hasOwn(blog, "_id"), "Property _id should not exist");
   }
+});
+
+test("blog posted successfully", async () => {
+  const newBlog = {
+    title: "Potatos are great",
+    author: "Alcachofus Maximus",
+    url: "potatosftw.com",
+    likes: 77,
+  };
+
+  await api
+    .post("/api/blogs")
+    .send(newBlog)
+    .expect(201)
+    .expect("Content-Type", /application\/json/);
+
+  const response = await api.get("/api/blogs");
+  const titles = response.body.map((blog) => blog.title);
+
+  assert.strictEqual(response.body.length, initialBlogs.length + 1);
+  assert.ok(titles.includes("Potatos are great"));
+});
+
+test("blog post missing body", async () => {
+  await api.post("/api/blogs").expect(400);
 });
 
 after(async () => {

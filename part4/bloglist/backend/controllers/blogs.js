@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { Blog } from "../models/blog.js";
+import { AppError } from "../utils/middleware.js";
 
 const blogsRouter = Router();
 
@@ -9,6 +10,9 @@ blogsRouter.get("/", async (req, res, next) => {
 });
 
 blogsRouter.post("/", async (req, res, next) => {
+  if (!req.body) {
+    throw new AppError("Missing content", 400);
+  }
   const blog = new Blog(req.body);
   const result = await blog.save();
   return res.status(201).json(result);
