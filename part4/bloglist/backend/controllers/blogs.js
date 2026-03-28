@@ -24,6 +24,17 @@ blogsRouter.post("/", async (req, res) => {
   return res.status(201).json(result);
 });
 
+blogsRouter.put("/:id", async (req, res) => {
+  const blogId = req.params.id;
+  const blogToUpdate = await Blog.findById(blogId);
+  if (!blogToUpdate) {
+    throw new AppError("Person not found", 404);
+  }
+  blogToUpdate.likes = req.body.likes;
+  const updatedBlog = await blogToUpdate.save();
+  return res.status(200).json(updatedBlog);
+});
+
 blogsRouter.delete("/:id", async (req, res) => {
   const blogId = req.params.id;
   await Blog.findByIdAndDelete(blogId);
