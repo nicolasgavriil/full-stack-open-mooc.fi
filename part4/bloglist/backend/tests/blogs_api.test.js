@@ -126,6 +126,17 @@ test("blog post missing body", async () => {
   await api.post("/api/blogs").expect(400);
 });
 
+test("likes default to 0", async () => {
+  const newBlog = {
+    title: "Potatos are great",
+    author: "Alcachofus Maximus",
+    url: "potatosftw.com",
+  };
+
+  const response = await api.post("/api/blogs").send(newBlog);
+  assert.ok(Object.hasOwn(response.body, "likes"), "Property likes is missing");
+});
+
 after(async () => {
   await mongoose.connection.close();
 });
