@@ -81,6 +81,18 @@ test("all blogs are returned", async () => {
   assert.strictEqual(response.body.length, 6);
 });
 
+test("blog by id is returned", async () => {
+  const response = await api.get("/api/blogs");
+  const testBlog = response.body[0];
+
+  const resultBlog = await api
+    .get(`/api/blogs/${testBlog.id}`)
+    .expect(200)
+    .expect("Content-Type", /application\/json/);
+
+  assert.deepStrictEqual(resultBlog.body, testBlog);
+});
+
 test("blog has id property", async () => {
   const response = await api
     .get("/api/blogs")
@@ -153,6 +165,16 @@ test("url is required", async () => {
   };
 
   await api.post("/api/blogs").send(blogWithoutUrl).expect(400);
+});
+
+test("blog by id is deleted", async () => {
+  const response = await api.get("/api/blogs");
+  const blogToDelete = response.body[0];
+
+  await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204);
+
+  const remainingBlogs = await api.get("/api/blogs");
+  assert.strictEqual(remainingBlogs.body.length, response.body.length - 1);
 });
 
 after(async () => {
