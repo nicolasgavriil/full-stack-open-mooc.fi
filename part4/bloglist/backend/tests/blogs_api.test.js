@@ -127,14 +127,32 @@ test("blog post missing body", async () => {
 });
 
 test("likes default to 0", async () => {
-  const newBlog = {
+  const blogWithoutLikes = {
     title: "Potatos are great",
     author: "Alcachofus Maximus",
     url: "potatosftw.com",
   };
 
-  const response = await api.post("/api/blogs").send(newBlog);
+  const response = await api.post("/api/blogs").send(blogWithoutLikes);
   assert.ok(Object.hasOwn(response.body, "likes"), "Property likes is missing");
+});
+
+test("title is required", async () => {
+  const blogWithoutTitle = {
+    author: "Alcachofus Maximus",
+    url: "potatosftw.com",
+  };
+
+  await api.post("/api/blogs").send(blogWithoutTitle).expect(400);
+});
+
+test("url is required", async () => {
+  const blogWithoutUrl = {
+    title: "Potatos are great",
+    author: "Alcachofus Maximus",
+  };
+
+  await api.post("/api/blogs").send(blogWithoutUrl).expect(400);
 });
 
 after(async () => {
