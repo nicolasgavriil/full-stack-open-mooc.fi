@@ -1,11 +1,12 @@
 import { Router } from "express";
 import { Blog } from "../models/blog.js";
 import { AppError } from "../utils/middleware.js";
+import { User } from "../models/user.js";
 
 const blogsRouter = Router();
 
 blogsRouter.get("/", async (req, res) => {
-  const blogs = await Blog.find({});
+  const blogs = await Blog.find({}).populate("user", { blogs: 0 });
   return res.status(200).json(blogs);
 });
 
@@ -19,9 +20,16 @@ blogsRouter.post("/", async (req, res) => {
   if (!req.body) {
     throw new AppError("Missing content", 400);
   }
-  const blog = new Blog(req.body);
-  const result = await blog.save();
-  return res.status(201).json(result);
+  const users = await User.find({});
+  const user = users[0];
+
+  const blog = new Blog({ ...req.body, user: user.id });
+  const savedBlog = await blog.save();
+
+  user.blogs = user.blogs.concat(savedBlog.id);
+  await user.save();
+
+  return res.status(201).json(savedBlog);
 });
 
 blogsRouter.put("/:id", async (req, res) => {

@@ -6,7 +6,12 @@ import bcrypt from "bcrypt";
 const usersRouter = Router();
 
 usersRouter.get("/", async (req, res) => {
-  const users = await User.find({});
+  const users = await User.find({}).populate("blogs", {
+    url: 1,
+    title: 1,
+    author: 1,
+    id: 1,
+  });
   return res.status(200).json(users);
 });
 
