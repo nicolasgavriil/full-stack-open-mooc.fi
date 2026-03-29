@@ -47,12 +47,8 @@ const initialBlogs = [
 ];
 
 const blogsInDb = async () => {
-  const response = await api
-    .get("/api/blogs")
-    .expect(200)
-    .expect("Content-Type", /application\/json/);
-
-  return response.body;
+  const blogs = await Blog.find({});
+  return blogs.map((b) => b.toJSON());
 };
 
 beforeEach(async () => {
