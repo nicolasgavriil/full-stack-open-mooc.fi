@@ -43,7 +43,7 @@ beforeEach(async () => {
   await User.insertMany(initialUsers);
 });
 
-describe("when there are some initial users saved", async () => {
+describe("when there are some initial users saved", () => {
   test("users are returned as json", async () => {
     await api
       .get("/api/users")
@@ -52,8 +52,8 @@ describe("when there are some initial users saved", async () => {
   });
 
   test("all users are returned", async () => {
-    const users = await usersInDb();
-    assert.strictEqual(users.length, initialUsers.length);
+    const users = await api.get("/api/users");
+    assert.strictEqual(users.body.length, initialUsers.length);
   });
 
   test("user by id is returned", async () => {
@@ -104,6 +104,99 @@ describe("creating a user", () => {
 
     const usernames = usersAtEnd.map((u) => u.username);
     assert(usernames.includes(newUser.username));
+  });
+
+  test("fails when username already exists", async () => {
+    const usersAtStart = await usersInDb();
+
+    const newUser = {
+      username: "turing",
+      name: "Matti Luukkainen",
+      password: "salainen",
+    };
+
+    await api
+      .post("/api/users")
+      .send(newUser)
+      .expect(409)
+      .expect("Content-Type", /application\/json/);
+
+    const usersAtEnd = await usersInDb();
+    assert.strictEqual(usersAtEnd.length, usersAtStart.length);
+  });
+
+  test("fails when username is not provided", async () => {
+    const usersAtStart = await usersInDb();
+
+    const newUser = {
+      name: "Matti Luukkainen",
+      password: "salainen",
+    };
+
+    await api
+      .post("/api/users")
+      .send(newUser)
+      .expect(400)
+      .expect("Content-Type", /application\/json/);
+
+    const usersAtEnd = await usersInDb();
+    assert.strictEqual(usersAtEnd.length, usersAtStart.length);
+  });
+
+  test("fails when password is not provided", async () => {
+    const usersAtStart = await usersInDb();
+
+    const newUser = {
+      username: "turing",
+      name: "Matti Luukkainen",
+    };
+
+    await api
+      .post("/api/users")
+      .send(newUser)
+      .expect(400)
+      .expect("Content-Type", /application\/json/);
+
+    const usersAtEnd = await usersInDb();
+    assert.strictEqual(usersAtEnd.length, usersAtStart.length);
+  });
+
+  test("fails when username is too short", async () => {
+    const usersAtStart = await usersInDb();
+
+    const newUser = {
+      username: "tu",
+      name: "Matti Luukkainen",
+      password: "salainen",
+    };
+
+    await api
+      .post("/api/users")
+      .send(newUser)
+      .expect(400)
+      .expect("Content-Type", /application\/json/);
+
+    const usersAtEnd = await usersInDb();
+    assert.strictEqual(usersAtEnd.length, usersAtStart.length);
+  });
+
+  test("fails when password is too short", async () => {
+    const usersAtStart = await usersInDb();
+
+    const newUser = {
+      username: "turing",
+      name: "Matti Luukkainen",
+      password: "sa",
+    };
+
+    await api
+      .post("/api/users")
+      .send(newUser)
+      .expect(400)
+      .expect("Content-Type", /application\/json/);
+
+    const usersAtEnd = await usersInDb();
+    assert.strictEqual(usersAtEnd.length, usersAtStart.length);
   });
 });
 

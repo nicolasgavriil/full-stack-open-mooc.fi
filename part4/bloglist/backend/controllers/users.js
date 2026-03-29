@@ -22,9 +22,13 @@ usersRouter.post("/", async (req, res) => {
     throw new AppError("Missing content", 400);
   }
 
+  if (password.length < 3) {
+    throw new AppError("Password must be at least 3 characters long", 400);
+  }
+
   const saltRounds = 10;
   const passwordHash = await bcrypt.hash(password, saltRounds);
-  console.log("passowrd", passwordHash);
+
   const user = new User({
     username,
     name,
