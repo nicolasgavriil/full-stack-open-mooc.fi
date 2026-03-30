@@ -24,11 +24,11 @@ usersRouter.get("/:id", async (req, res) => {
 usersRouter.post("/", async (req, res) => {
   const { username, name, password } = req.body;
   if (!username || !password) {
-    throw new AppError("Missing content", 400);
+    throw new AppError("missing content", 400);
   }
 
   if (password.length < 3) {
-    throw new AppError("Password must be at least 3 characters long", 400);
+    throw new AppError("password must be at least 3 characters long", 400);
   }
 
   const saltRounds = 10;

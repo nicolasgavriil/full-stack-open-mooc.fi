@@ -9,7 +9,7 @@ const loginRouter = Router();
 loginRouter.post("/", async (req, res) => {
   const { username, password } = req.body;
   if (!username || !password) {
-    throw new AppError("Missing content", 400);
+    throw new AppError("missing content", 400);
   }
 
   const user = await User.findOne({ username });
@@ -18,7 +18,7 @@ loginRouter.post("/", async (req, res) => {
     : false;
 
   if (!passwordCorrect) {
-    throw new AppError("Invalid username or password", 401);
+    throw new AppError("invalid username or password", 401);
   }
 
   const userForToken = {

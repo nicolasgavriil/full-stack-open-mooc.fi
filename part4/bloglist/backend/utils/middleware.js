@@ -20,27 +20,27 @@ const tokenExtractor = (req, res, next) => {
 };
 
 const unknownEndpoint = (req, res) => {
-  return res.status(404).send({ error: "Unknown endpoint" });
+  return res.status(404).send({ error: "unknown endpoint" });
 };
 
 const errorHandler = (err, req, res, next) => {
   logger.error(err.message);
 
   if (err.name === "CastError") {
-    return res.status(400).json({ error: "Malformatted id" });
+    return res.status(400).json({ error: "malformatted id" });
   }
   if (err.name === "ValidationError") {
     return res.status(400).json({ error: err.message });
   }
   if (err.name === "MongoServerError" && err.code === 11000) {
-    return res.status(409).json({ error: "Username already exists" });
+    return res.status(409).json({ error: "username already exists" });
   }
   if (err.name === "JsonWebTokenError") {
-    return res.status(401).json({ error: "Invalid token" });
+    return res.status(401).json({ error: "invalid token" });
   }
 
   return res.status(err.status || 500).json({
-    error: err.message || "Internal server error",
+    error: err.message || "internal server error",
   });
 };
 
