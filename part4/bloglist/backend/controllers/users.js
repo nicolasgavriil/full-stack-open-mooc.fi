@@ -1,7 +1,8 @@
 import { Router } from "express";
+import bcrypt from "bcrypt";
+
 import { User } from "../models/user.js";
 import { AppError } from "../utils/middleware.js";
-import bcrypt from "bcrypt";
 
 const usersRouter = Router();
 

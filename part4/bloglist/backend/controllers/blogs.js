@@ -1,8 +1,6 @@
 import { Router } from "express";
 import { Blog } from "../models/blog.js";
 import { AppError } from "../utils/middleware.js";
-import { User } from "../models/user.js";
-import jwt from "jsonwebtoken";
 import middleware from "../utils/middleware.js";
 
 const blogsRouter = Router();

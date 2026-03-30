@@ -1,10 +1,11 @@
 import { test, describe, after, beforeEach } from "node:test";
 import mongoose from "mongoose";
 import supertest from "supertest";
-import app from "../app.js";
-import { User } from "../models/user.js";
 import assert from "node:assert";
 import bcrypt from "bcrypt";
+
+import app from "../app.js";
+import { User } from "../models/user.js";
 
 const api = supertest(app);
 
