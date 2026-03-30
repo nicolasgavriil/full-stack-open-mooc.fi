@@ -6,14 +6,6 @@ import jwt from "jsonwebtoken";
 
 const blogsRouter = Router();
 
-const getTokenFrom = (req) => {
-  const authorization = req.get("authorization");
-  if (authorization && authorization.startsWith("Bearer ")) {
-    return authorization.replace("Bearer ", "");
-  }
-  return null;
-};
-
 blogsRouter.get("/", async (req, res) => {
   const blogs = await Blog.find({}).populate("user", { blogs: 0 });
   return res.status(200).json(blogs);
@@ -31,7 +23,7 @@ blogsRouter.post("/", async (req, res) => {
     throw new AppError("Missing content", 400);
   }
 
-  const userData = jwt.verify(getTokenFrom(req), process.env.JWT_SECRET_KEY);
+  const userData = jwt.verify(req.token, process.env.JWT_SECRET_KEY);
   if (!userData) {
     throw new AppError("Invalid credentials", 401);
   }

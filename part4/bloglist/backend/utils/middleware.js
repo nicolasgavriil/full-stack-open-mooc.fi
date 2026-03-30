@@ -8,8 +8,19 @@ const requestLogger = (req, res, next) => {
   next();
 };
 
+const tokenExtractor = (req, res, next) => {
+  const authorization = req.get("authorization");
+  if (authorization && authorization.startsWith("Bearer ")) {
+    req.token = authorization.replace("Bearer ", "");
+  } else {
+    req.token = null;
+  }
+
+  next();
+};
+
 const unknownEndpoint = (req, res) => {
-  res.status(404).send({ error: "Unknown endpoint" });
+  return res.status(404).send({ error: "Unknown endpoint" });
 };
 
 const errorHandler = (err, req, res, next) => {
@@ -40,4 +51,4 @@ export class AppError extends Error {
   }
 }
 
-export default { requestLogger, unknownEndpoint, errorHandler };
+export default { requestLogger, tokenExtractor, unknownEndpoint, errorHandler };
