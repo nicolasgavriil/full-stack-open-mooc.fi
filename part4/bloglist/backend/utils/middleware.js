@@ -1,4 +1,6 @@
+import { User } from "../models/user.js";
 import logger from "./logger.js";
+import jwt from "jsonwebtoken";
 
 const requestLogger = (req, res, next) => {
   logger.info("Method:", req.method);
@@ -16,6 +18,22 @@ const tokenExtractor = (req, res, next) => {
     req.token = null;
   }
 
+  next();
+};
+
+const userExtractor = async (req, res, next) => {
+  if (!req.token) {
+    throw new AppError("missing credentials", 401);
+  }
+
+  const decodedData = jwt.verify(req.token, process.env.JWT_SECRET_KEY);
+
+  const user = await User.findById(decodedData.id);
+  if (!user) {
+    throw new AppError("invalid credentials", 401);
+  }
+
+  req.user = user;
   next();
 };
 
@@ -51,4 +69,10 @@ export class AppError extends Error {
   }
 }
 
-export default { requestLogger, tokenExtractor, unknownEndpoint, errorHandler };
+export default {
+  requestLogger,
+  tokenExtractor,
+  userExtractor,
+  unknownEndpoint,
+  errorHandler,
+};
