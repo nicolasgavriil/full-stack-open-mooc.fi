@@ -8,8 +8,6 @@ import loginService from "../services/login";
 const App = () => {
   const [notification, setNotification] = useState(null);
   const [blogs, setBlogs] = useState([]);
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
   const [user, setUser] = useState(() => {
     const loggedUser = window.localStorage.getItem("loggedUser");
     return loggedUser ? JSON.parse(loggedUser) : null;
@@ -33,25 +31,18 @@ const App = () => {
     fetchBlogs();
   }, []);
 
-  const handleLogin = (e) => {
-    e.preventDefault();
-    const fetchUser = async () => {
-      try {
-        const user = await loginService.login(username, password);
-        window.localStorage.setItem("loggedUser", JSON.stringify(user));
-        setUser(user);
-        setUsername("");
-        setPassword("");
-      } catch (err) {
-        console.error(err);
-        setNotification({
-          message: err.response?.data?.error || "Something went wrong",
-          type: "error",
-        });
-      }
-    };
-
-    fetchUser();
+  const handleLogin = async (username, password) => {
+    try {
+      const user = await loginService.login(username, password);
+      window.localStorage.setItem("loggedUser", JSON.stringify(user));
+      setUser(user);
+    } catch (err) {
+      setNotification({
+        message: err.response?.data?.error || "Something went wrong",
+        type: "error",
+      });
+      throw err;
+    }
   };
 
   const handleLogout = () => {
@@ -59,22 +50,13 @@ const App = () => {
     window.localStorage.removeItem("loggedUser");
   };
 
-  const handleUsernameChange = (e) => setUsername(e.target.value);
-  const handlePasswordChange = (e) => setPassword(e.target.value);
-
   return (
     <div>
       <Notification notification={notification} />
       {user ? (
         <LoggedInView user={user} blogs={blogs} onClick={handleLogout} />
       ) : (
-        <LoginForm
-          username={username}
-          password={password}
-          onUsernameChange={handleUsernameChange}
-          onPasswordChange={handlePasswordChange}
-          onSubmit={handleLogin}
-        />
+        <LoginForm onSubmit={handleLogin} />
       )}
     </div>
   );

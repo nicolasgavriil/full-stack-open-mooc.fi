@@ -1,6 +1,6 @@
 import Blog from "./Blog.jsx";
 
-const BlogList = ({ blogs, user }) => {
+const BlogList = ({ blogs }) => {
   return (
     <>
       {blogs.map((blog) => (
