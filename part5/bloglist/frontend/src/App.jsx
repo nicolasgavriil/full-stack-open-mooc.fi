@@ -56,6 +56,10 @@ const App = () => {
     try {
       const newBlog = await blogService.create(content);
       setBlogs(blogs.concat(newBlog));
+      setNotification({
+        message: `New blog: "${newBlog.title}" by ${newBlog.author} added`,
+        type: "success",
+      });
     } catch (err) {
       setNotification({
         message: err.response?.data?.error || "Something went wrong",
