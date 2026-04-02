@@ -35,6 +35,7 @@ const App = () => {
     try {
       const user = await loginService.login(username, password);
       window.localStorage.setItem("loggedUser", JSON.stringify(user));
+      blogService.setToken(user.token);
       setUser(user);
     } catch (err) {
       setNotification({
@@ -50,11 +51,30 @@ const App = () => {
     window.localStorage.removeItem("loggedUser");
   };
 
+  const handleCreateBlog = async (content) => {
+    console.log("create blog");
+    try {
+      const newBlog = await blogService.create(content);
+      setBlogs(blogs.concat(newBlog));
+    } catch (err) {
+      setNotification({
+        message: err.response?.data?.error || "Something went wrong",
+        type: "error",
+      });
+      throw err;
+    }
+  };
+
   return (
     <div>
       <Notification notification={notification} />
       {user ? (
-        <LoggedInView user={user} blogs={blogs} onClick={handleLogout} />
+        <LoggedInView
+          user={user}
+          blogs={blogs}
+          onLogout={handleLogout}
+          onCreateBlog={handleCreateBlog}
+        />
       ) : (
         <LoginForm onSubmit={handleLogin} />
       )}
