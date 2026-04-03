@@ -4,6 +4,7 @@ import LoginForm from "../components/LoginForm.jsx";
 import Notification from "../components/Notification.jsx";
 import blogService from "../services/blogs";
 import loginService from "../services/login";
+import Togglable from "../components/Togglable.jsx";
 
 const App = () => {
   const [notification, setNotification] = useState(null);
@@ -80,7 +81,9 @@ const App = () => {
           onCreateBlog={handleCreateBlog}
         />
       ) : (
-        <LoginForm onSubmit={handleLogin} />
+        <Togglable buttonLabel="login">
+          <LoginForm onSubmit={handleLogin} />
+        </Togglable>
       )}
     </div>
   );
