@@ -24,3 +24,7 @@
   border: 1px solid;
   margin-bottom: 5px;
 }
+
+.delete-blog {
+  background-color: red;
+}

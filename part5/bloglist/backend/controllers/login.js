@@ -30,7 +30,7 @@ loginRouter.post("/", async (req, res) => {
 
   return res
     .status(200)
-    .json({ token, username: user.username, name: user.name });
+    .json({ token, username: user.username, name: user.name, id: user.id });
 });
 
 export default loginRouter;

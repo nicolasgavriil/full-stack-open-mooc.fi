@@ -15,6 +15,12 @@ const App = () => {
   });
 
   useEffect(() => {
+    if (user) {
+      blogService.setToken(user.token);
+    }
+  }, [user]);
+
+  useEffect(() => {
     if (!notification) {
       return;
     }
@@ -36,7 +42,6 @@ const App = () => {
     try {
       const user = await loginService.login(username, password);
       window.localStorage.setItem("loggedUser", JSON.stringify(user));
-      blogService.setToken(user.token);
       setUser(user);
     } catch (err) {
       setNotification({
@@ -70,12 +75,30 @@ const App = () => {
     }
   };
 
-  const handleLikeBlog = async (blogId) => {
+  const handleLikeBlog = async (blog) => {
     try {
-      const updatedBlog = await blogService.like(blogId);
+      const updatedBlog = await blogService.like(blog.id);
       setBlogs((prevBlogs) =>
-        prevBlogs.map((b) => (b.id === blogId ? updatedBlog : b)),
+        prevBlogs.map((b) => (b.id === blog.id ? updatedBlog : b)),
       );
+    } catch (err) {
+      setNotification({
+        message: err.response?.data?.error || "Something went wrong",
+        type: "error",
+      });
+    }
+  };
+
+  const handleRemoveBlog = async (blog) => {
+    try {
+      if (window.confirm(`Remove blog: ${blog.title} by ${blog.author}`)) {
+        await blogService.remove(blog.id);
+        setBlogs((prevBlogs) => prevBlogs.filter((b) => b.id !== blog.id));
+        setNotification({
+          message: `Blog deleted`,
+          type: "success",
+        });
+      }
     } catch (err) {
       setNotification({
         message: err.response?.data?.error || "Something went wrong",
@@ -94,6 +117,7 @@ const App = () => {
           onLogout={handleLogout}
           onCreateBlog={handleCreateBlog}
           onLikeBlog={handleLikeBlog}
+          onRemoveBlog={handleRemoveBlog}
         />
       ) : (
         <Togglable buttonLabel="login">

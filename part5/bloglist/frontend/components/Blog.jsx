@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const Blog = ({ blog, onLikeBlog }) => {
+const Blog = ({ blog, user, onLikeBlog, onRemoveBlog }) => {
   const [showDetails, setShowDetails] = useState(false);
 
   const toggleShowDetails = () => {
@@ -8,7 +8,11 @@ const Blog = ({ blog, onLikeBlog }) => {
   };
 
   const handleLike = async () => {
-    await onLikeBlog(blog.id);
+    await onLikeBlog(blog);
+  };
+
+  const handleDelete = async () => {
+    await onRemoveBlog(blog);
   };
 
   return (
@@ -27,6 +31,15 @@ const Blog = ({ blog, onLikeBlog }) => {
             </button>
           </div>
           <div>{blog.user.name}</div>
+          {blog.user.id === user.id && (
+            <button
+              className="delete-blog"
+              type="button"
+              onClick={handleDelete}
+            >
+              delete
+            </button>
+          )}
         </div>
       )}
     </div>
