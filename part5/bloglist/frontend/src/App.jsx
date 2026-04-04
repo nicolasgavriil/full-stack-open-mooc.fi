@@ -70,6 +70,20 @@ const App = () => {
     }
   };
 
+  const handleLikeBlog = async (blogId) => {
+    try {
+      const updatedBlog = await blogService.like(blogId);
+      setBlogs((prevBlogs) =>
+        prevBlogs.map((b) => (b.id === blogId ? updatedBlog : b)),
+      );
+    } catch (err) {
+      setNotification({
+        message: err.response?.data?.error || "Something went wrong",
+        type: "error",
+      });
+    }
+  };
+
   return (
     <div>
       <Notification notification={notification} />
@@ -79,6 +93,7 @@ const App = () => {
           blogs={blogs}
           onLogout={handleLogout}
           onCreateBlog={handleCreateBlog}
+          onLikeBlog={handleLikeBlog}
         />
       ) : (
         <Togglable buttonLabel="login">

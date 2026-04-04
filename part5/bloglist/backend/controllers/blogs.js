@@ -16,6 +16,18 @@ blogsRouter.get("/:id", async (req, res) => {
   return res.status(200).json(blog);
 });
 
+blogsRouter.post("/:id/likes", async (req, res) => {
+  const blogId = req.params.id;
+  const blogToUpdate = await Blog.findById(blogId).populate("user");
+  if (!blogToUpdate) {
+    throw new AppError("blog not found", 404);
+  }
+
+  blogToUpdate.likes++;
+  const updatedBlog = await blogToUpdate.save();
+  return res.status(200).json(updatedBlog);
+});
+
 blogsRouter.use(middleware.userExtractor);
 
 blogsRouter.post("/", async (req, res) => {

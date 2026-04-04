@@ -3,7 +3,7 @@ import BlogList from "./BlogList.jsx";
 import BlogCreationForm from "./BlogCreationForm.jsx";
 import Togglable from "./Togglable.jsx";
 
-const LoggedInView = ({ user, blogs, onLogout, onCreateBlog }) => {
+const LoggedInView = ({ user, blogs, onLogout, onCreateBlog, onLikeBlog }) => {
   const blogFormRef = useRef();
 
   const handleCreateAndHide = async (blogObject) => {
@@ -27,7 +27,7 @@ const LoggedInView = ({ user, blogs, onLogout, onCreateBlog }) => {
       <Togglable buttonLabel="create new blog" ref={blogFormRef}>
         <BlogCreationForm onCreateBlog={handleCreateAndHide} />
       </Togglable>
-      <BlogList blogs={blogs} />
+      <BlogList blogs={blogs} onLikeBlog={onLikeBlog} />
     </>
   );
 };
