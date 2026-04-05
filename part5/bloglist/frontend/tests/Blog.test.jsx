@@ -4,10 +4,13 @@ import userEvent from "@testing-library/user-event";
 import Blog from "../components/Blog.jsx";
 
 describe("<Blog />", () => {
+  let onLikeBlog;
+  let onRemoveBlog;
+  let blog;
   beforeEach(() => {
-    const onLikeBlog = vi.fn();
-    const onRemoveBlog = vi.fn();
-    const blog = {
+    onLikeBlog = vi.fn();
+    onRemoveBlog = vi.fn();
+    blog = {
       title: "Testing frontend",
       author: "Linus Torvalds",
       url: "potatosftw.net",
@@ -38,24 +41,36 @@ describe("<Blog />", () => {
   });
 
   test("renders title and author", () => {
-    screen.getByText("Testing frontend Linus Torvalds");
+    screen.getByText(`${blog.title} ${blog.author}`);
   });
 
   test("does not render URL nor likes by default", () => {
-    const url = screen.queryByText("potatosftw.net");
+    const url = screen.queryByText(blog.url);
     expect(url).not.toBeInTheDocument();
-    const likes = screen.queryByText("likes 74");
+    const likes = screen.queryByText(`likes ${blog.likes}`);
     expect(likes).not.toBeInTheDocument();
   });
 
   test("renders URL and likes after clicking the view button", async () => {
     const user = userEvent.setup();
-    const button = screen.getByText("view");
-    await user.click(button);
+    const viewButton = screen.getByText("view");
+    await user.click(viewButton);
 
-    const url = screen.queryByText("potatosftw.net");
+    const url = screen.queryByText(blog.url);
     expect(url).toBeInTheDocument();
-    const likes = screen.queryByText("likes 74");
+    const likes = screen.queryByText(`likes ${blog.likes}`);
     expect(likes).toBeInTheDocument();
+  });
+
+  test("like button calls handler", async () => {
+    const user = userEvent.setup();
+    const viewButton = screen.getByText("view");
+    await user.click(viewButton);
+
+    const likeButton = screen.getByText("like");
+    await user.click(likeButton);
+    await user.click(likeButton);
+
+    expect(onLikeBlog.mock.calls).toHaveLength(2);
   });
 });
