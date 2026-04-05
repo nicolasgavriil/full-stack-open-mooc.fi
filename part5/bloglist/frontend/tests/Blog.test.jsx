@@ -1,6 +1,6 @@
 import { describe, test, expect, beforeEach, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
-
+import userEvent from "@testing-library/user-event";
 import Blog from "../components/Blog.jsx";
 
 describe("<Blog />", () => {
@@ -46,5 +46,16 @@ describe("<Blog />", () => {
     expect(url).not.toBeInTheDocument();
     const likes = screen.queryByText("likes 74");
     expect(likes).not.toBeInTheDocument();
+  });
+
+  test("renders URL and likes after clicking the view button", async () => {
+    const user = userEvent.setup();
+    const button = screen.getByText("view");
+    await user.click(button);
+
+    const url = screen.queryByText("potatosftw.net");
+    expect(url).toBeInTheDocument();
+    const likes = screen.queryByText("likes 74");
+    expect(likes).toBeInTheDocument();
   });
 });
