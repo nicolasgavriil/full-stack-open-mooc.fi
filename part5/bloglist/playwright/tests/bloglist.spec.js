@@ -1,4 +1,3 @@
-// @ts-check
 import { test, expect } from "@playwright/test";
 
 test.describe("Bloglist", () => {
@@ -6,9 +5,9 @@ test.describe("Bloglist", () => {
     await request.post("/api/testing/reset");
     await request.post("api/users", {
       data: {
-        name: "Matti Luukkainen",
-        username: "mluukkai",
-        password: "salainen",
+        name: "Linus Torvalds",
+        username: "linus",
+        password: "linux",
       },
     });
 
@@ -22,5 +21,27 @@ test.describe("Bloglist", () => {
   test("Login form is shown", async ({ page }) => {
     await page.getByRole("button", { name: "login" }).click();
     await expect(page.getByText("Log in to application")).toBeVisible();
+  });
+
+  test.describe("Login", () => {
+    test("succeeds with correct credentials", async ({ page }) => {
+      await page.getByRole("button", { name: "login" }).click();
+      await page.getByLabel("username").fill("linus");
+      await page.getByLabel("password").fill("linux");
+      await page.getByRole("button", { name: "login" }).click();
+
+      await expect(page.getByText("Linus Torvalds logged in")).toBeVisible();
+    });
+
+    test("fails with wrong credentials", async ({ page }) => {
+      await page.getByRole("button", { name: "login" }).click();
+      await page.getByLabel("username").fill("linus");
+      await page.getByLabel("password").fill("wrong");
+      await page.getByRole("button", { name: "login" }).click();
+
+      await expect(
+        page.getByText("invalid username or password"),
+      ).toBeVisible();
+    });
   });
 });
