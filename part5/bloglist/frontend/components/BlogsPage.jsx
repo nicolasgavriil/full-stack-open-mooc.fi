@@ -1,18 +1,18 @@
-import { useRef } from "react";
+//import { useRef } from "react";
 import BlogList from "./BlogList.jsx";
 import BlogCreationForm from "./BlogCreationForm.jsx";
 import Togglable from "./Togglable.jsx";
 
-const LoggedInView = ({
+const BlogsPage = ({
   user,
   blogs,
-  onLogout,
-  onCreateBlog,
+  //onLogout,
+  //onCreateBlog,
   onLikeBlog,
   onRemoveBlog,
 }) => {
-  const blogFormRef = useRef();
-
+  //const blogFormRef = useRef();
+  /*
   const handleCreateAndHide = async (blogObject) => {
     try {
       await onCreateBlog(blogObject);
@@ -21,11 +21,7 @@ const LoggedInView = ({
       // Catching error to prevent form reset; App handles notification
     }
   };
-
-  return (
-    <>
-      <h2>Blogs</h2>
-      <p>
+  <p>
         {user.name} logged in
         <button type="button" onClick={onLogout}>
           logout
@@ -34,6 +30,11 @@ const LoggedInView = ({
       <Togglable buttonLabel="create new blog" ref={blogFormRef}>
         <BlogCreationForm onCreateBlog={handleCreateAndHide} />
       </Togglable>
+      */
+  return (
+    <>
+      <h2>Blogs</h2>
+
       <BlogList
         blogs={blogs}
         user={user}
@@ -44,4 +45,4 @@ const LoggedInView = ({
   );
 };
 
-export default LoggedInView;
+export default BlogsPage;

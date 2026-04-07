@@ -1,12 +1,15 @@
 import { useState, useEffect } from "react";
-import LoggedInView from "../components/LoggedInView.jsx";
+import { Routes, Route, Link, useNavigate } from "react-router-dom";
+import BlogsPage from "../components/BlogsPage.jsx";
 import LoginForm from "../components/LoginForm.jsx";
 import Notification from "../components/Notification.jsx";
 import blogService from "../services/blogs";
 import loginService from "../services/login";
 import Togglable from "../components/Togglable.jsx";
+import BlogCreationForm from "../components/BlogCreationForm.jsx";
 
 const App = () => {
+  const navigate = useNavigate();
   const [notification, setNotification] = useState(null);
   const [blogs, setBlogs] = useState([]);
   const [user, setUser] = useState(() => {
@@ -43,6 +46,7 @@ const App = () => {
       const user = await loginService.login(username, password);
       window.localStorage.setItem("loggedUser", JSON.stringify(user));
       setUser(user);
+      navigate("/blogs");
     } catch (err) {
       setNotification({
         message: err.response?.data?.error || "Something went wrong",
@@ -55,6 +59,7 @@ const App = () => {
   const handleLogout = () => {
     setUser(null);
     window.localStorage.removeItem("loggedUser");
+    navigate("/blogs");
   };
 
   const handleCreateBlog = async (content) => {
@@ -106,24 +111,45 @@ const App = () => {
       });
     }
   };
+  /*
+  <Route
+          path="/create"
+          element={<BlogCreationForm createNote={handleCreateBlog} />}
+        />
+        */
+  const blogsElement = (
+    <BlogsPage
+      user={user}
+      blogs={blogs}
+      onLogout={handleLogout}
+      onCreateBlog={handleCreateBlog}
+      onLikeBlog={handleLikeBlog}
+      onRemoveBlog={handleRemoveBlog}
+    />
+  );
 
   return (
     <div>
+      <div>
+        <Link className="page-link" to="/blogs">
+          blogs
+        </Link>
+        {user ? (
+          <button type="button" onClick={handleLogout}>
+            logout
+          </button>
+        ) : (
+          <Link className="page-link" to="/login">
+            login
+          </Link>
+        )}
+      </div>
       <Notification notification={notification} />
-      {user ? (
-        <LoggedInView
-          user={user}
-          blogs={blogs}
-          onLogout={handleLogout}
-          onCreateBlog={handleCreateBlog}
-          onLikeBlog={handleLikeBlog}
-          onRemoveBlog={handleRemoveBlog}
-        />
-      ) : (
-        <Togglable buttonLabel="login">
-          <LoginForm onSubmit={handleLogin} />
-        </Togglable>
-      )}
+      <Routes>
+        <Route path="/" element={blogsElement} />
+        <Route path="/blogs" element={blogsElement} />
+        <Route path="/login" element={<LoginForm onSubmit={handleLogin} />} />
+      </Routes>
     </div>
   );
 };

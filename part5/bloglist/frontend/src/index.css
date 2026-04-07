@@ -28,3 +28,7 @@
 .delete-blog {
   background-color: red;
 }
+
+.page-link {
+  padding: 5px;
+}
