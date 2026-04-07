@@ -1,18 +1,19 @@
-import Blog from "./Blog.jsx";
+import { Link } from "react-router-dom";
+import BlogPage from "./BlogPage.jsx";
 
-const BlogList = ({ blogs, user, onLikeBlog, onRemoveBlog }) => {
+const BlogList = ({ blogs }) => {
   const sortedBlogs = blogs.toSorted((a, b) => b.likes - a.likes);
   return (
     <>
-      {sortedBlogs.map((blog) => (
-        <Blog
-          key={blog.id}
-          blog={blog}
-          user={user}
-          onLikeBlog={onLikeBlog}
-          onRemoveBlog={onRemoveBlog}
-        />
-      ))}
+      <ul>
+        {sortedBlogs.map((blog) => (
+          <li key={blog.id}>
+            <Link to={`/blogs/${blog.id}`}>
+              {`${blog.title} by ${blog.author}`}
+            </Link>
+          </li>
+        ))}
+      </ul>
     </>
   );
 };

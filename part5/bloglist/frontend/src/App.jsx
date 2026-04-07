@@ -7,6 +7,7 @@ import blogService from "../services/blogs";
 import loginService from "../services/login";
 import Togglable from "../components/Togglable.jsx";
 import BlogCreationForm from "../components/BlogCreationForm.jsx";
+import BlogPage from "../components/BlogPage.jsx";
 
 const App = () => {
   const navigate = useNavigate();
@@ -29,7 +30,7 @@ const App = () => {
     }
     setTimeout(() => {
       setNotification(null);
-    }, 10000);
+    }, 5000);
   }, [notification]);
 
   useEffect(() => {
@@ -103,6 +104,7 @@ const App = () => {
           message: `Blog deleted`,
           type: "success",
         });
+        navigate("/blogs");
       }
     } catch (err) {
       setNotification({
@@ -148,6 +150,17 @@ const App = () => {
       <Routes>
         <Route path="/" element={blogsElement} />
         <Route path="/blogs" element={blogsElement} />
+        <Route
+          path="/blogs/:id"
+          element={
+            <BlogPage
+              blogs={blogs}
+              user={user}
+              onLikeBlog={handleLikeBlog}
+              onRemoveBlog={handleRemoveBlog}
+            />
+          }
+        />
         <Route path="/login" element={<LoginForm onSubmit={handleLogin} />} />
       </Routes>
     </div>

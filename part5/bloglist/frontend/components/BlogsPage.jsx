@@ -4,12 +4,9 @@ import BlogCreationForm from "./BlogCreationForm.jsx";
 import Togglable from "./Togglable.jsx";
 
 const BlogsPage = ({
-  user,
   blogs,
   //onLogout,
   //onCreateBlog,
-  onLikeBlog,
-  onRemoveBlog,
 }) => {
   //const blogFormRef = useRef();
   /*
@@ -35,12 +32,7 @@ const BlogsPage = ({
     <>
       <h2>Blogs</h2>
 
-      <BlogList
-        blogs={blogs}
-        user={user}
-        onLikeBlog={onLikeBlog}
-        onRemoveBlog={onRemoveBlog}
-      />
+      <BlogList blogs={blogs} />
     </>
   );
 };
