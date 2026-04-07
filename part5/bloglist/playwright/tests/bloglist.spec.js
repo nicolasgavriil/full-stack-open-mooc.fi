@@ -70,5 +70,41 @@ test.describe("Bloglist", () => {
       await page.getByRole("button", { name: "like" }).click();
       await expect(page.getByText("likes 1")).toBeVisible();
     });
+
+    test("clicking the delete button and confirming removes the blog", async ({
+      page,
+    }) => {
+      await createBlog(page, "title", "author", "url");
+      await page.getByRole("button", { name: "view" }).click();
+
+      page.once("dialog", async (dialog) => {
+        expect(dialog.type()).toBe("confirm");
+        expect(dialog.message()).toBe("Remove blog: title by author");
+        await dialog.accept();
+      });
+
+      await page.getByRole("button", { name: "delete" }).click();
+
+      await expect(page.getByText("Blog deleted")).toBeVisible();
+      await expect(page.getByText("title author")).not.toBeVisible();
+    });
+
+    test("clicking the delete button and cancelling does not remove the blog", async ({
+      page,
+    }) => {
+      await createBlog(page, "title", "author", "url");
+      await page.getByRole("button", { name: "view" }).click();
+
+      page.once("dialog", async (dialog) => {
+        expect(dialog.type()).toBe("confirm");
+        expect(dialog.message()).toBe("Remove blog: title by author");
+        await dialog.dismiss();
+      });
+
+      await page.getByRole("button", { name: "delete" }).click();
+
+      await expect(page.getByText("Blog deleted")).not.toBeVisible();
+      await expect(page.getByText("title author")).toBeVisible();
+    });
   });
 });
