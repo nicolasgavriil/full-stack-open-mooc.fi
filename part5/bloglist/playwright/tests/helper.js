@@ -1,3 +1,5 @@
+import { expect } from "@playwright/test";
+
 const login = async (page, username, password) => {
   await page.getByRole("button", { name: "login" }).click();
   await page.getByLabel("username").fill(username);
@@ -15,6 +17,8 @@ const createBlog = async (page, title, author, url) => {
   await page.getByLabel("author").fill(author);
   await page.getByLabel("url").fill(url);
   await page.getByRole("button", { name: "create" }).click();
+
+  await expect(page.getByText(`${title} ${author}`)).toBeVisible();
 };
 
 export { login, logout, createBlog };

@@ -114,7 +114,7 @@ test.describe("Bloglist", () => {
       await expect(page.getByText("title author")).toBeVisible();
     });
 
-    test.only("a user can not see the delete button on someone else's blog", async ({
+    test("a user can not see the delete button on someone else's blog", async ({
       page,
     }) => {
       await createBlog(page, "title", "author", "url");
@@ -131,6 +131,32 @@ test.describe("Bloglist", () => {
       await expect(
         page.getByRole("button", { name: "delete" }),
       ).not.toBeVisible();
+    });
+
+    test("blogs are ordered by likes, highest first", async ({ page }) => {
+      await createBlog(page, "first", "author1", "url1");
+      await createBlog(page, "second", "author2", "url2");
+      await createBlog(page, "third", "author3", "url3");
+
+      const blogs = page.locator(".blog");
+      await expect(blogs).toHaveCount(3);
+
+      const likeBlog = async (index, times) => {
+        const blog = blogs.nth(index);
+        await blog.getByRole("button", { name: "view" }).click();
+
+        for (let i = 0; i < times; i++) {
+          await blog.getByRole("button", { name: "like" }).click();
+        }
+      };
+
+      await likeBlog(1, 5);
+      await likeBlog(0, 2);
+      await likeBlog(2, 1);
+
+      await expect(blogs.nth(0)).toContainText("second");
+      await expect(blogs.nth(1)).toContainText("first");
+      await expect(blogs.nth(2)).toContainText("third");
     });
   });
 });
