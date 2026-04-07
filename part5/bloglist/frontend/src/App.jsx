@@ -72,6 +72,7 @@ const App = () => {
         message: `New blog: "${newBlog.title}" by ${newBlog.author} added`,
         type: "success",
       });
+      navigate("/blogs");
     } catch (err) {
       setNotification({
         message: err.response?.data?.error || "Something went wrong",
@@ -113,22 +114,6 @@ const App = () => {
       });
     }
   };
-  /*
-  <Route
-          path="/create"
-          element={<BlogCreationForm createNote={handleCreateBlog} />}
-        />
-        */
-  const blogsElement = (
-    <BlogsPage
-      user={user}
-      blogs={blogs}
-      onLogout={handleLogout}
-      onCreateBlog={handleCreateBlog}
-      onLikeBlog={handleLikeBlog}
-      onRemoveBlog={handleRemoveBlog}
-    />
-  );
 
   return (
     <div>
@@ -136,6 +121,11 @@ const App = () => {
         <Link className="page-link" to="/blogs">
           blogs
         </Link>
+        {user && (
+          <Link className="page-link" to="/create">
+            new blog
+          </Link>
+        )}
         {user ? (
           <button type="button" onClick={handleLogout}>
             logout
@@ -148,8 +138,8 @@ const App = () => {
       </div>
       <Notification notification={notification} />
       <Routes>
-        <Route path="/" element={blogsElement} />
-        <Route path="/blogs" element={blogsElement} />
+        <Route path="/" element={<BlogsPage blogs={blogs} />} />
+        <Route path="/blogs" element={<BlogsPage blogs={blogs} />} />
         <Route
           path="/blogs/:id"
           element={
@@ -160,6 +150,10 @@ const App = () => {
               onRemoveBlog={handleRemoveBlog}
             />
           }
+        />
+        <Route
+          path="/create"
+          element={<BlogCreationForm onCreateBlog={handleCreateBlog} />}
         />
         <Route path="/login" element={<LoginForm onSubmit={handleLogin} />} />
       </Routes>
