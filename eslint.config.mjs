@@ -26,7 +26,7 @@ export default defineConfig([
     rules: {
       "@stylistic/js/indent": ["error", 2],
       "@stylistic/js/linebreak-style": ["error", "unix"],
-      "@stylistic/js/quotes": ["error", "double"],
+      "@stylistic/js/quotes": ["error", "double", { avoidEscape: true }],
       "@stylistic/js/semi": ["error", "always"],
       eqeqeq: "error",
       "no-trailing-spaces": "error",
