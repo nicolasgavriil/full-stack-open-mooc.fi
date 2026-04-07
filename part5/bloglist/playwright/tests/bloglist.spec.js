@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { login, createBlog } from "./helper.js";
+import { login, logout, createBlog } from "./helper.js";
 
 test.describe("Bloglist", () => {
   test.beforeEach(async ({ page, request }) => {
@@ -9,6 +9,13 @@ test.describe("Bloglist", () => {
         name: "Linus Torvalds",
         username: "linus",
         password: "linux",
+      },
+    });
+    await request.post("/api/users", {
+      data: {
+        name: "Alcachofus",
+        username: "ttt",
+        password: "555",
       },
     });
 
@@ -105,6 +112,25 @@ test.describe("Bloglist", () => {
 
       await expect(page.getByText("Blog deleted")).not.toBeVisible();
       await expect(page.getByText("title author")).toBeVisible();
+    });
+
+    test.only("a user can not see the delete button on someone else's blog", async ({
+      page,
+    }) => {
+      await createBlog(page, "title", "author", "url");
+      await page.getByRole("button", { name: "view" }).click();
+      await expect(page.getByRole("button", { name: "delete" })).toBeVisible();
+
+      await logout(page);
+      await expect(page.getByRole("button", { name: "login" })).toBeVisible();
+      await login(page, "ttt", "555");
+      await expect(page.getByText("Alcachofus")).toBeVisible();
+      await expect(page.getByText("title author")).toBeVisible();
+
+      await page.getByRole("button", { name: "view" }).click();
+      await expect(
+        page.getByRole("button", { name: "delete" }),
+      ).not.toBeVisible();
     });
   });
 });
