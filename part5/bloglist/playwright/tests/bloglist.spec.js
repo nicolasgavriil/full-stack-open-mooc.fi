@@ -49,9 +49,9 @@ test.describe("Bloglist app", () => {
 
       await page.getByRole("link", { name: "title by author" }).click();
 
-      await expect(page.getByText("likes 0")).toBeVisible();
+      await expect(page.getByText("0 likes")).toBeVisible();
       await page.getByRole("button", { name: "like" }).click();
-      await expect(page.getByText("likes 1")).toBeVisible();
+      await expect(page.getByText("1 likes")).toBeVisible();
     });
 
     test("A logged-in user can delete a blog", async ({ page }) => {

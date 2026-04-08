@@ -1,4 +1,12 @@
 import { useParams } from "react-router-dom";
+import {
+  Card,
+  CardContent,
+  Typography,
+  Button,
+  Stack,
+  Link,
+} from "@mui/material";
 
 const BlogPage = ({ blogs, user, onLikeBlog, onRemoveBlog }) => {
   const { id } = useParams();
@@ -14,27 +22,63 @@ const BlogPage = ({ blogs, user, onLikeBlog, onRemoveBlog }) => {
   };
 
   return (
-    <div className="blog">
-      <h3>{`${blog.author}: ${blog.title}`}</h3>
+    <Card elevation={3} sx={{ mt: 3, maxWidth: 600, borderRadius: 2 }}>
+      <CardContent>
+        <Typography variant="h5" sx={{ fontWeight: "bold", mb: 0.5 }}>
+          {blog.title}
+        </Typography>
 
-      <div>
-        <div>{blog.url}</div>
-        <div>
-          {`likes ${blog.likes}`}
+        <Typography variant="body1" color="text.secondary" sx={{ mb: 0.5 }}>
+          by {blog.author}
+        </Typography>
+
+        <Link
+          href={blog.url}
+          target="_blank"
+          rel="noopener"
+          underline="hover"
+          sx={{ display: "block", mb: 0.5, fontWeight: 600 }}
+        >
+          {blog.url}
+        </Link>
+
+        <Typography variant="body2" color="text.secondary" sx={{ mb: 1.5 }}>
+          Added by {blog.user.name}
+        </Typography>
+
+        <Stack direction="row" spacing={2} alignItems="center">
+          <Typography
+            variant="body1"
+            sx={{ fontWeight: "medium", display: "flex", alignItems: "center" }}
+          >
+            {blog.likes} likes
+          </Typography>
+
           {user && (
-            <button type="button" onClick={handleLike}>
-              like
-            </button>
+            <Button
+              variant="outlined"
+              size="small"
+              onClick={handleLike}
+              sx={{ fontWeight: 600, borderWidth: "2px" }}
+            >
+              LIKE
+            </Button>
           )}
-        </div>
-        <div>Added by {blog.user.name}</div>
-        {blog.user.id === user?.id && (
-          <button className="delete-blog" type="button" onClick={handleDelete}>
-            delete
-          </button>
-        )}
-      </div>
-    </div>
+
+          {blog.user.id === user?.id && (
+            <Button
+              variant="outlined"
+              color="error"
+              size="small"
+              onClick={handleDelete}
+              sx={{ fontWeight: 600, borderWidth: "2px" }}
+            >
+              DELETE
+            </Button>
+          )}
+        </Stack>
+      </CardContent>
+    </Card>
   );
 };
 

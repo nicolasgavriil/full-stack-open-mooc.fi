@@ -61,45 +61,47 @@ describe("<BlogPage />", () => {
   test("unauthenticated users see blog information and likes, but no buttons", () => {
     renderBlogPage();
 
-    screen.getByText("Linus Torvalds: Testing frontend");
+    screen.getByText("Testing frontend");
+    screen.getByText("by Linus Torvalds");
     screen.getByText("potatosftw.net");
-    screen.getByText("likes 74");
+    screen.getByText("74 likes");
     screen.getByText("Added by Linus Torvalds");
 
     expect(
-      screen.queryByRole("button", { name: "like" }),
+      screen.queryByRole("button", { name: /like/i }),
     ).not.toBeInTheDocument();
     expect(
-      screen.queryByRole("button", { name: "delete" }),
+      screen.queryByRole("button", { name: /delete/i }),
     ).not.toBeInTheDocument();
   });
 
   test("authenticated non-creator sees only the like button", () => {
     renderBlogPage(otherUser);
 
-    screen.getByText("Linus Torvalds: Testing frontend");
+    screen.getByText("Testing frontend");
+    screen.getByText("by Linus Torvalds");
     screen.getByText("potatosftw.net");
-    screen.getByText("likes 74");
+    screen.getByText("74 likes");
 
-    expect(screen.getByRole("button", { name: "like" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /like/i })).toBeInTheDocument();
     expect(
-      screen.queryByRole("button", { name: "delete" }),
+      screen.queryByRole("button", { name: /delete/i }),
     ).not.toBeInTheDocument();
   });
 
   test("creator sees both like and delete buttons", () => {
     renderBlogPage(creator);
 
-    expect(screen.getByRole("button", { name: "like" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "delete" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /like/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /delete/i })).toBeInTheDocument();
   });
 
   test("clicking like calls handler", async () => {
     const user = userEvent.setup();
     renderBlogPage(otherUser);
 
-    await user.click(screen.getByRole("button", { name: "like" }));
-    await user.click(screen.getByRole("button", { name: "like" }));
+    await user.click(screen.getByRole("button", { name: /like/i }));
+    await user.click(screen.getByRole("button", { name: /like/i }));
 
     expect(onLikeBlog).toHaveBeenCalledTimes(2);
   });
@@ -108,7 +110,7 @@ describe("<BlogPage />", () => {
     const user = userEvent.setup();
     renderBlogPage(creator);
 
-    await user.click(screen.getByRole("button", { name: "delete" }));
+    await user.click(screen.getByRole("button", { name: /delete/i }));
 
     expect(onRemoveBlog).toHaveBeenCalledTimes(1);
   });
