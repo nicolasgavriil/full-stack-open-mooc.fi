@@ -1,13 +1,14 @@
 import { useState, useEffect } from "react";
-import { Routes, Route, Link, useNavigate } from "react-router-dom";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import { Container } from "@mui/material";
-import BlogsPage from "../components/BlogsPage.jsx";
-import LoginForm from "../components/LoginForm.jsx";
+import NavBar from "../components/NavBar.jsx";
 import Notification from "../components/Notification.jsx";
-import blogService from "../services/blogs";
-import loginService from "../services/login";
-import BlogCreationForm from "../components/BlogCreationForm.jsx";
+import LoginForm from "../components/LoginForm.jsx";
+import BlogsPage from "../components/BlogsPage.jsx";
 import BlogPage from "../components/BlogPage.jsx";
+import BlogCreationForm from "../components/BlogCreationForm.jsx";
+import loginService from "../services/login";
+import blogService from "../services/blogs";
 
 const App = () => {
   const navigate = useNavigate();
@@ -118,25 +119,7 @@ const App = () => {
   return (
     <Container>
       <div>
-        <div>
-          <Link className="page-link" to="/blogs">
-            blogs
-          </Link>
-          {user && (
-            <Link className="page-link" to="/create">
-              new blog
-            </Link>
-          )}
-          {user ? (
-            <button type="button" onClick={handleLogout}>
-              logout
-            </button>
-          ) : (
-            <Link className="page-link" to="/login">
-              login
-            </Link>
-          )}
-        </div>
+        <NavBar user={user} handleLogout={handleLogout} />
         <Notification notification={notification} />
         <Routes>
           <Route path="/" element={<BlogsPage blogs={blogs} />} />
