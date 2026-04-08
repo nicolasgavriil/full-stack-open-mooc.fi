@@ -9,10 +9,10 @@ test("<BlogCreationForm /> calls the handler with the right data when a blog is 
 
   render(<BlogCreationForm onCreateBlog={createBlog} />);
 
-  const titleInput = screen.getByLabelText("Title:");
-  const authorInput = screen.getByLabelText("Author:");
-  const urlInput = screen.getByLabelText("Url:");
-  const submitButton = screen.getByText("create");
+  const titleInput = screen.getByLabelText("title");
+  const authorInput = screen.getByLabelText("author");
+  const urlInput = screen.getByLabelText("url");
+  const submitButton = screen.getByText("CREATE");
 
   await user.type(titleInput, "title");
   await user.type(authorInput, "author");
