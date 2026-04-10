@@ -23,10 +23,12 @@ const useAnecdoteStore = create((set) => ({
       const anecdotes = await anecdoteService.getAll();
       set(() => ({ anecdotes }));
     },
-    add: (anecdote) =>
+    add: async (anecdote) => {
+      const savedAnecdote = await anecdoteService.create(asObject(anecdote));
       set((state) => ({
-        anecdotes: state.anecdotes.concat(asObject(anecdote)),
-      })),
+        anecdotes: state.anecdotes.concat(savedAnecdote),
+      }));
+    },
     setFilter: (filter) =>
       set(() => ({
         filter,
