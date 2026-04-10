@@ -26,6 +26,9 @@ const useAnecdoteStore = create((set) => ({
           a.id === id ? updatedAnecdote : a,
         ),
       }));
+      useNotificationStore
+        .getState()
+        .notify(`You voted "${updatedAnecdote.content}"`);
     },
     initialize: async () => {
       const anecdotes = await anecdoteService.getAll();
@@ -36,6 +39,9 @@ const useAnecdoteStore = create((set) => ({
       set((state) => ({
         anecdotes: state.anecdotes.concat(savedAnecdote),
       }));
+      useNotificationStore
+        .getState()
+        .notify(`You created "${savedAnecdote.content}"`);
     },
     setFilter: (filter) =>
       set(() => ({
@@ -51,3 +57,30 @@ export const useAnecdotes = () => {
 };
 export const useAnecdoteActions = () =>
   useAnecdoteStore((state) => state.actions);
+
+const useNotificationStore = create((set) => ({
+  message: null,
+  timeoutId: null,
+
+  notify: (message, seconds = 5) => {
+    if (useNotificationStore.getState().timeoutId) {
+      clearTimeout(useNotificationStore.getState().timeoutId);
+    }
+
+    set({ message });
+
+    const id = setTimeout(() => {
+      set({ message: null, timeoutId: null });
+    }, seconds * 1000);
+
+    set({ timeoutId: id });
+  },
+}));
+
+export const useNotification = () => {
+  return useNotificationStore((state) => state.message);
+};
+
+export const useNotificationActions = () => {
+  return useNotificationStore((state) => state.actions);
+};
