@@ -13,12 +13,20 @@ const useAnecdoteStore = create((set) => ({
   anecdotes: [],
   filter: "",
   actions: {
-    vote: (id) =>
+    vote: async (id) => {
+      const anecdote = useAnecdoteStore
+        .getState()
+        .anecdotes.find((a) => a.id === id);
+      const updatedAnecdote = await anecdoteService.update({
+        ...anecdote,
+        votes: anecdote.votes + 1,
+      });
       set((state) => ({
         anecdotes: state.anecdotes.map((a) =>
-          a.id === id ? { ...a, votes: a.votes + 1 } : a,
+          a.id === id ? updatedAnecdote : a,
         ),
-      })),
+      }));
+    },
     initialize: async () => {
       const anecdotes = await anecdoteService.getAll();
       set(() => ({ anecdotes }));
