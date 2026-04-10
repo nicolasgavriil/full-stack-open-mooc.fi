@@ -3,7 +3,13 @@ import { useAnecdotes, useAnecdoteActions } from "./store";
 const App = () => {
   const anecdotes = useAnecdotes();
 
-  const { vote } = useAnecdoteActions();
+  const { vote, add } = useAnecdoteActions();
+
+  const handleCreate = (e) => {
+    e.preventDefault();
+    add(e.target.anecdote.value);
+    e.target.reset();
+  };
 
   return (
     <div>
@@ -18,11 +24,11 @@ const App = () => {
         </div>
       ))}
       <h2>create new</h2>
-      <form>
+      <form onSubmit={handleCreate}>
         <div>
-          <input />
+          <input name="anecdote" />
         </div>
-        <button>create</button>
+        <button type="submit">create</button>
       </form>
     </div>
   );
