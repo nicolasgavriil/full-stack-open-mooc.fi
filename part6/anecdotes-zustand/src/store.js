@@ -47,6 +47,13 @@ const useAnecdoteStore = create((set) => ({
       set(() => ({
         filter,
       })),
+    remove: async (id) => {
+      await anecdoteService.remove(id);
+      set((state) => ({
+        anecdotes: state.anecdotes.filter((a) => a.id !== id),
+      }));
+      useNotificationStore.getState().notify(`Anecdote deleted`);
+    },
   },
 }));
 
