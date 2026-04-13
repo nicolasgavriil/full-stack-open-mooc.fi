@@ -60,7 +60,9 @@ const useAnecdoteStore = create((set) => ({
 export const useAnecdotes = () => {
   const anecdotes = useAnecdoteStore((state) => state.anecdotes);
   const filter = useAnecdoteStore((state) => state.filter);
-  return anecdotes.filter((a) => a.content.includes(filter));
+  return anecdotes
+    .filter((a) => a.content.includes(filter))
+    .toSorted((a1, a2) => a2.votes - a1.votes);
 };
 export const useAnecdoteActions = () =>
   useAnecdoteStore((state) => state.actions);
