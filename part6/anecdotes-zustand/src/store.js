@@ -65,6 +65,8 @@ export const useAnecdotes = () => {
 export const useAnecdoteActions = () =>
   useAnecdoteStore((state) => state.actions);
 
+export default useAnecdoteStore;
+
 const useNotificationStore = create((set) => ({
   message: null,
   timeoutId: null,
