@@ -65,6 +65,37 @@ describe("useAnecdoteActions", () => {
       { id: "1", content: "lowest", votes: 1 },
     ]);
   });
+
+  test("vote increases the number of votes for an anecdote", async () => {
+    const anecdote = {
+      content: "Testing Zustand stores is fun",
+      id: "1",
+      votes: 2,
+    };
+
+    useAnecdoteStore.setState({
+      anecdotes: [anecdote],
+      filter: "",
+    });
+
+    anecdoteService.update.mockResolvedValue({
+      ...anecdote,
+      votes: 3,
+    });
+
+    const { result } = renderHook(() => useAnecdoteActions());
+
+    await act(async () => {
+      await result.current.vote("1");
+    });
+
+    const { result: anecdotesResult } = renderHook(() => useAnecdotes());
+    expect(anecdotesResult.current[0].votes).toBe(3);
+    expect(anecdoteService.update).toHaveBeenCalledWith({
+      ...anecdote,
+      votes: 3,
+    });
+  });
 });
 
 describe("useAnecdotes filtering", () => {
