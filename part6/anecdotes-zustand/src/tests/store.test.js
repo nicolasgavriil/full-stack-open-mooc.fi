@@ -66,3 +66,33 @@ describe("useAnecdoteActions", () => {
     ]);
   });
 });
+
+describe("useAnecdotes filtering", () => {
+  const anecdotes = [
+    { id: "1", content: "React is great", votes: 5 },
+    { id: "2", content: "Redux is hard", votes: 3 },
+    { id: "3", content: "Zustand is simple", votes: 7 },
+  ];
+
+  beforeEach(() => {
+    useAnecdoteStore.setState({
+      anecdotes,
+      filter: "",
+    });
+  });
+
+  test("returns all anecdotes with no filter", () => {
+    const { result } = renderHook(() => useAnecdotes());
+    expect(result.current).toHaveLength(3);
+  });
+
+  test("returns a properly filtered list of anecdotes", () => {
+    useAnecdoteStore.setState({
+      anecdotes,
+      filter: "React",
+    });
+
+    const { result } = renderHook(() => useAnecdotes());
+    expect(result.current).toEqual([anecdotes[0]]);
+  });
+});
