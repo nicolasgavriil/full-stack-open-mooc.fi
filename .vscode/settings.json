@@ -6,7 +6,7 @@
     },
     "Frontend": {
       "path": "/bin/bash",
-      "args": ["-c", "cd part6 && cd anecdotes-zustand && exec bash"]
+      "args": ["-c", "cd part6 && cd query-anecdotes && exec bash"]
     }
   }
 }
