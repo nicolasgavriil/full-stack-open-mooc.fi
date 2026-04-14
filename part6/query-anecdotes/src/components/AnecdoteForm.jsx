@@ -3,8 +3,7 @@ const AnecdoteForm = ({ addAnecdote }) => {
     event.preventDefault();
     const content = event.target.anecdote.value;
     event.target.reset();
-    console.log("new anecdote");
-    addAnecdote(content);
+    addAnecdote({ content, votes: 0 });
   };
 
   return (

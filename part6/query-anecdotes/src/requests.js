@@ -8,11 +8,11 @@ export const getAnecdotes = async () => {
   return await response.json();
 };
 
-export const createAnecdote = async (content) => {
+export const createAnecdote = async (anecdote) => {
   const options = {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ content }),
+    body: JSON.stringify(anecdote),
   };
 
   const response = await fetch(baseUrl, options);
