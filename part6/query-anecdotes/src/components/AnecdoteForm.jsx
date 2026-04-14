@@ -1,10 +1,11 @@
-const AnecdoteForm = () => {
+const AnecdoteForm = ({ addAnecdote }) => {
   const onCreate = (event) => {
-    event.preventDefault()
-    const content = event.target.anecdote.value
-    event.target.reset()
-    console.log('new anecdote')
-  }
+    event.preventDefault();
+    const content = event.target.anecdote.value;
+    event.target.reset();
+    console.log("new anecdote");
+    addAnecdote(content);
+  };
 
   return (
     <div>
@@ -14,7 +15,7 @@ const AnecdoteForm = () => {
         <button type="submit">create</button>
       </form>
     </div>
-  )
-}
+  );
+};
 
-export default AnecdoteForm
+export default AnecdoteForm;
