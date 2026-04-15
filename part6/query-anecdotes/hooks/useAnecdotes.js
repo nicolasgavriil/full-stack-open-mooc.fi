@@ -4,9 +4,11 @@ import {
   createAnecdote,
   updateAnecdote,
 } from "../src/requests.js";
+import { useNotification } from "./useNotification.js";
 
 export const useAnecdotes = () => {
   const queryClient = useQueryClient();
+  const { setNotification } = useNotification();
 
   const result = useQuery({
     queryKey: ["anecdotes"],
@@ -16,8 +18,16 @@ export const useAnecdotes = () => {
 
   const newAnecdoteMutation = useMutation({
     mutationFn: createAnecdote,
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["anecdotes"] });
+
+      setNotification(`Created: ${data.content}`);
+    },
+    onError: (err) => {
+      const errorMessage =
+        err.response?.data?.error || err.message || "An unknown error occurred";
+
+      setNotification(`Error: ${errorMessage}`);
     },
   });
 
@@ -31,7 +41,15 @@ export const useAnecdotes = () => {
   return {
     result,
     addAnecdote: (anecdote) => newAnecdoteMutation.mutate(anecdote),
-    updateAnecdote: (anecdote) =>
-      updateAnecdoteMutation.mutate({ ...anecdote, votes: anecdote.votes + 1 }),
+    voteAnecdote: (anecdote) => {
+      updateAnecdoteMutation.mutate(
+        { ...anecdote, votes: anecdote.votes + 1 },
+        {
+          onSuccess: (updatedData) =>
+            setNotification(`Voted: ${updatedData.content}`),
+          onError: (err) => setNotification(`Error: ${err.message}`),
+        },
+      );
+    },
   };
 };

@@ -3,7 +3,7 @@ import AnecdoteForm from "./components/AnecdoteForm";
 import Notification from "./components/Notification";
 
 const App = () => {
-  const { result, addAnecdote, updateAnecdote } = useAnecdotes();
+  const { result, addAnecdote, voteAnecdote } = useAnecdotes();
 
   if (result.isPending) {
     return <div>loading data...</div>;
@@ -27,7 +27,7 @@ const App = () => {
           <div>{anecdote.content}</div>
           <div>
             has {anecdote.votes}
-            <button onClick={() => updateAnecdote(anecdote)}>vote</button>
+            <button onClick={() => voteAnecdote(anecdote)}>vote</button>
           </div>
         </div>
       ))}
