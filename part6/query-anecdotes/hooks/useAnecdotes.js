@@ -4,11 +4,11 @@ import {
   createAnecdote,
   updateAnecdote,
 } from "../src/requests.js";
-import { useNotification } from "./useNotification.js";
+import { useNotify } from "./useNotify.js";
 
 export const useAnecdotes = () => {
   const queryClient = useQueryClient();
-  const { setNotification } = useNotification();
+  const { setNotification } = useNotify();
 
   const result = useQuery({
     queryKey: ["anecdotes"],

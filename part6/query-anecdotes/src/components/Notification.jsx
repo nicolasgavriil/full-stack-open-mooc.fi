@@ -1,4 +1,4 @@
-import { useNotification } from "../../hooks/useNotification.js";
+import { useNotify } from "../../hooks/useNotify.js";
 
 const Notification = () => {
   const style = {
@@ -8,7 +8,7 @@ const Notification = () => {
     marginBottom: 5,
   };
 
-  const { notification } = useNotification();
+  const { notification } = useNotify();
 
   if (!notification) return null;
 
