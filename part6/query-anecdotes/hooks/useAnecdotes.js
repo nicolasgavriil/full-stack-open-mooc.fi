@@ -25,7 +25,7 @@ export const useAnecdotes = () => {
     },
     onError: (err) => {
       const errorMessage =
-        err.response?.data?.error || err.message || "An unknown error occurred";
+        err.error || err.message || "An unknown error occurred";
 
       setNotification(`Error: ${errorMessage}`);
     },
