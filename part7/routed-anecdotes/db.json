@@ -27,13 +27,6 @@
       "info": "asdasd",
       "votes": 0,
       "id": "UDS5jIgrwE8"
-    },
-    {
-      "content": "Test spread",
-      "author": "asdasd",
-      "info": "asdasd",
-      "votes": 0,
-      "id": "Fq-0Ffrs0cs"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
