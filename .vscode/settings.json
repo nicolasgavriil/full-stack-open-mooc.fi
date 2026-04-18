@@ -2,11 +2,11 @@
   "terminal.integrated.profiles.linux": {
     "Backend": {
       "path": "/bin/bash",
-      "args": ["-c", "cd part5 && cd bloglist && cd backend && exec bash"]
+      "args": ["-c", "cd part7 && cd bloglist && cd server && exec bash"]
     },
     "Frontend": {
       "path": "/bin/bash",
-      "args": ["-c", "cd part7 && cd routed-anecdotes && exec bash"]
+      "args": ["-c", "cd part7 && cd bloglist && cd client && exec bash"]
     }
   }
 }
