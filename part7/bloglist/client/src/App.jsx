@@ -146,6 +146,7 @@ const App = () => {
               path="/login"
               element={<LoginForm onSubmit={handleLogin} />}
             />
+            <Route path="*" element={<h1>404 - Page not found</h1>} />
           </Routes>
         </ErrorBoundary>
       </div>

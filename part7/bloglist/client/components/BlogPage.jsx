@@ -11,7 +11,7 @@ import {
 const BlogPage = ({ blogs, user, onLikeBlog, onRemoveBlog }) => {
   const { id } = useParams();
   const blog = blogs.find((b) => b.id === id);
-  if (!blog) return null;
+  if (!blog) return <h1>404 - Post not found</h1>;
 
   const handleLike = async () => {
     await onLikeBlog(blog);
