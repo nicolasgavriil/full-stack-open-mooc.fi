@@ -10,10 +10,15 @@ import BlogCreationForm from "../components/BlogCreationForm.jsx";
 import ErrorBoundary from "../components/ErrorBoundary.jsx";
 import loginService from "../services/login.js";
 import blogService from "../services/blogs.js";
+import {
+  useNotification,
+  useNotificationActions,
+} from "../stores/notificationStore.js";
 
 const App = () => {
   const navigate = useNavigate();
-  const [notification, setNotification] = useState(null);
+  const notification = useNotification();
+  const { notify } = useNotificationActions();
   const [blogs, setBlogs] = useState([]);
   const [user, setUser] = useState(() => {
     const loggedUser = window.localStorage.getItem("loggedUser");
@@ -25,15 +30,6 @@ const App = () => {
       blogService.setToken(user.token);
     }
   }, [user]);
-
-  useEffect(() => {
-    if (!notification) {
-      return;
-    }
-    setTimeout(() => {
-      setNotification(null);
-    }, 5000);
-  }, [notification]);
 
   useEffect(() => {
     const fetchBlogs = async () => {
@@ -51,7 +47,7 @@ const App = () => {
       setUser(user);
       navigate("/blogs");
     } catch (err) {
-      setNotification({
+      notify({
         message: err.response?.data?.error || "Something went wrong",
         type: "error",
       });
@@ -66,20 +62,21 @@ const App = () => {
   };
 
   const handleCreateBlog = async (content) => {
-    console.log("create blog");
     try {
       const newBlog = await blogService.create(content);
       setBlogs(blogs.concat(newBlog));
-      setNotification({
+
+      notify({
         message: `New blog: "${newBlog.title}" by ${newBlog.author} added`,
         type: "success",
       });
       navigate("/blogs");
     } catch (err) {
-      setNotification({
+      notify({
         message: err.response?.data?.error || "Something went wrong",
         type: "error",
       });
+
       throw err;
     }
   };
@@ -91,7 +88,7 @@ const App = () => {
         prevBlogs.map((b) => (b.id === blog.id ? updatedBlog : b)),
       );
     } catch (err) {
-      setNotification({
+      notify({
         message: err.response?.data?.error || "Something went wrong",
         type: "error",
       });
@@ -103,14 +100,14 @@ const App = () => {
       if (window.confirm(`Remove blog: ${blog.title} by ${blog.author}`)) {
         await blogService.remove(blog.id);
         setBlogs((prevBlogs) => prevBlogs.filter((b) => b.id !== blog.id));
-        setNotification({
+        notify({
           message: `Blog deleted`,
           type: "success",
         });
         navigate("/blogs");
       }
     } catch (err) {
-      setNotification({
+      notify({
         message: err.response?.data?.error || "Something went wrong",
         type: "error",
       });
