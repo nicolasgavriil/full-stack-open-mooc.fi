@@ -7,6 +7,7 @@ import LoginForm from "../components/LoginForm.jsx";
 import BlogsPage from "../components/BlogsPage.jsx";
 import BlogPage from "../components/BlogPage.jsx";
 import BlogCreationForm from "../components/BlogCreationForm.jsx";
+import ErrorBoundary from "../components/ErrorBoundary.jsx";
 import loginService from "../services/login.js";
 import blogService from "../services/blogs.js";
 
@@ -121,26 +122,32 @@ const App = () => {
       <div>
         <NavBar user={user} handleLogout={handleLogout} />
         <Notification notification={notification} />
-        <Routes>
-          <Route path="/" element={<BlogsPage blogs={blogs} />} />
-          <Route path="/blogs" element={<BlogsPage blogs={blogs} />} />
-          <Route
-            path="/blogs/:id"
-            element={
-              <BlogPage
-                blogs={blogs}
-                user={user}
-                onLikeBlog={handleLikeBlog}
-                onRemoveBlog={handleRemoveBlog}
-              />
-            }
-          />
-          <Route
-            path="/create"
-            element={<BlogCreationForm onCreateBlog={handleCreateBlog} />}
-          />
-          <Route path="/login" element={<LoginForm onSubmit={handleLogin} />} />
-        </Routes>
+        <ErrorBoundary>
+          <Routes>
+            <Route path="/" element={<BlogsPage blogs={blogs} />} />
+            <Route path="/blogs" element={<BlogsPage blogs={blogs} />} />
+
+            <Route
+              path="/blogs/:id"
+              element={
+                <BlogPage
+                  blogs={blogs}
+                  user={user}
+                  onLikeBlog={handleLikeBlog}
+                  onRemoveBlog={handleRemoveBlog}
+                />
+              }
+            />
+            <Route
+              path="/create"
+              element={<BlogCreationForm onCreateBlog={handleCreateBlog} />}
+            />
+            <Route
+              path="/login"
+              element={<LoginForm onSubmit={handleLogin} />}
+            />
+          </Routes>
+        </ErrorBoundary>
       </div>
     </Container>
   );

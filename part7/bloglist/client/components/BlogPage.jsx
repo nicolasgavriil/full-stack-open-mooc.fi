@@ -46,7 +46,7 @@ const BlogPage = ({ blogs, user, onLikeBlog, onRemoveBlog }) => {
           Added by {blog.user.name}
         </Typography>
 
-        <Stack direction="row" spacing={2} alignItems="center">
+        <Stack direction="row" spacing={2}>
           <Typography
             variant="body1"
             sx={{ fontWeight: "medium", display: "flex", alignItems: "center" }}
