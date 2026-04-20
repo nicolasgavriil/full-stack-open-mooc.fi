@@ -1,10 +1,10 @@
 import BlogList from "./BlogList.jsx";
 
-const BlogsPage = ({ blogs }) => {
+const BlogsPage = () => {
   return (
     <>
       <h2>Blogs</h2>
-      <BlogList blogs={blogs} />
+      <BlogList />
     </>
   );
 };

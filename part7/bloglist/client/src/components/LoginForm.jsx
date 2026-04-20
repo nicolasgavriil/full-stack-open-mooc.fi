@@ -1,18 +1,22 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuthActions } from "../stores/authStore.js";
 import { TextField, Button } from "@mui/material";
 
-const LoginForm = ({ onSubmit }) => {
+const LoginForm = () => {
+  const navigate = useNavigate();
+  const { login } = useAuthActions();
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await onSubmit(username, password);
-      setUsername("");
-      setPassword("");
-    } catch {
-      // Catching error to prevent form reset; App handles notification
+      await login({ username, password });
+      navigate("/blogs");
+    } catch (err) {
+      console.log(err);
     }
   };
 

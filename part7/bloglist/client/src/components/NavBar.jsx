@@ -1,9 +1,20 @@
 import { AppBar, Toolbar, Typography, Box, Button } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuthActions } from "../stores/authStore.js";
+import { useAuth } from "../stores/authStore.js";
 
-const NavBar = ({ user, handleLogout }) => {
+const NavBar = () => {
   const navButtonStyle = {
     "&:hover": { bgcolor: "rgba(255,255,255,0.3)" },
+  };
+
+  const navigate = useNavigate();
+  const user = useAuth();
+  const { logout } = useAuthActions();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/blogs");
   };
 
   return (

@@ -1,5 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useBlogActions } from "../stores/blogStore.js";
+import { useBlogs } from "../stores/blogStore.js";
+import { useAuth } from "../stores/authStore.js";
 import {
   Card,
   CardContent,
@@ -9,10 +11,14 @@ import {
   Link,
 } from "@mui/material";
 
-const BlogPage = ({ blogs, user }) => {
+const BlogPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+
+  const user = useAuth();
   const { likeBlog, removeBlog } = useBlogActions();
+  const blogs = useBlogs();
+
   const blog = blogs.find((b) => b.id === id);
   if (!blog) return null;
 

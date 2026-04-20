@@ -1,7 +1,10 @@
 import { Link } from "react-router-dom";
+import { useBlogs } from "../stores/blogStore.js";
 
-const BlogList = ({ blogs }) => {
+const BlogList = () => {
+  const blogs = useBlogs();
   const sortedBlogs = blogs.toSorted((a, b) => b.likes - a.likes);
+
   return (
     <ul>
       {sortedBlogs.map((blog) => (

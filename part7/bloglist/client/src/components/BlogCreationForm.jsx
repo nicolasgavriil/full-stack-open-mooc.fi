@@ -4,11 +4,12 @@ import { useNavigate } from "react-router-dom";
 import { useBlogActions } from "../stores/blogStore.js";
 
 const BlogCreationForm = () => {
+  const navigate = useNavigate();
+  const { createBlog } = useBlogActions();
+
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [url, setUrl] = useState("");
-  const navigate = useNavigate();
-  const { createBlog } = useBlogActions();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -16,8 +17,8 @@ const BlogCreationForm = () => {
       await createBlog({ title, author, url });
 
       navigate("/blogs");
-    } catch {
-      // Catching error to prevent form reset; App handles notification
+    } catch (err) {
+      console.log(err);
     }
   };
 
