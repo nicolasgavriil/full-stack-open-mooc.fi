@@ -27,6 +27,42 @@ const useBlogStore = create((set) => ({
         throw err;
       }
     },
+
+    likeBlog: async (blog) => {
+      try {
+        const updatedBlog = await blogService.like(blog.id);
+        set((state) => ({
+          blogs: state.blogs.map((b) => (b.id === blog.id ? updatedBlog : b)),
+        }));
+
+        useNotificationStore.getState().actions.notify({
+          message: `Liked "${updatedBlog.title}" by ${updatedBlog.author}`,
+          type: "success",
+        });
+      } catch (err) {
+        useNotificationStore.getState().actions.notify({
+          message: err.response?.data?.error || "Something went wrong",
+          type: "error",
+        });
+      }
+    },
+    removeBlog: async (blog) => {
+      try {
+        await blogService.remove(blog.id);
+        (set((state) => ({
+          blogs: state.blogs.filter((b) => b.id !== blog.id),
+        })),
+          useNotificationStore.getState().actions.notify({
+            message: `Blog deleted`,
+            type: "success",
+          }));
+      } catch (err) {
+        useNotificationStore.getState().actions.notify({
+          message: err.response?.data?.error || "Something went wrong",
+          type: "error",
+        });
+      }
+    },
   },
 }));
 

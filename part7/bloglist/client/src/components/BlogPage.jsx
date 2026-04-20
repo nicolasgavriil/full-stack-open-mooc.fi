@@ -1,4 +1,5 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+import { useBlogActions } from "../stores/blogStore.js";
 import {
   Card,
   CardContent,
@@ -8,17 +9,22 @@ import {
   Link,
 } from "@mui/material";
 
-const BlogPage = ({ blogs, user, onLikeBlog, onRemoveBlog }) => {
+const BlogPage = ({ blogs, user }) => {
   const { id } = useParams();
+  const navigate = useNavigate();
+  const { likeBlog, removeBlog } = useBlogActions();
   const blog = blogs.find((b) => b.id === id);
-  if (!blog) return <h1>404 - Post not found</h1>;
+  if (!blog) return null;
 
   const handleLike = async () => {
-    await onLikeBlog(blog);
+    await likeBlog(blog);
   };
 
   const handleDelete = async () => {
-    await onRemoveBlog(blog);
+    if (window.confirm(`Remove blog: ${blog.title} by ${blog.author}`)) {
+      await removeBlog(blog);
+      navigate("/blogs");
+    }
   };
 
   return (

@@ -59,39 +59,6 @@ const App = () => {
     navigate("/blogs");
   };
 
-  const handleLikeBlog = async (blog) => {
-    try {
-      const updatedBlog = await blogService.like(blog.id);
-      setBlogs((prevBlogs) =>
-        prevBlogs.map((b) => (b.id === blog.id ? updatedBlog : b)),
-      );
-    } catch (err) {
-      notify({
-        message: err.response?.data?.error || "Something went wrong",
-        type: "error",
-      });
-    }
-  };
-
-  const handleRemoveBlog = async (blog) => {
-    try {
-      if (window.confirm(`Remove blog: ${blog.title} by ${blog.author}`)) {
-        await blogService.remove(blog.id);
-        setBlogs((prevBlogs) => prevBlogs.filter((b) => b.id !== blog.id));
-        notify({
-          message: `Blog deleted`,
-          type: "success",
-        });
-        navigate("/blogs");
-      }
-    } catch (err) {
-      notify({
-        message: err.response?.data?.error || "Something went wrong",
-        type: "error",
-      });
-    }
-  };
-
   return (
     <Container>
       <div>
@@ -104,14 +71,7 @@ const App = () => {
 
             <Route
               path="/blogs/:id"
-              element={
-                <BlogPage
-                  blogs={blogs}
-                  user={user}
-                  onLikeBlog={handleLikeBlog}
-                  onRemoveBlog={handleRemoveBlog}
-                />
-              }
+              element={<BlogPage blogs={blogs} user={user} />}
             />
             <Route path="/create" element={<BlogCreationForm />} />
             <Route
