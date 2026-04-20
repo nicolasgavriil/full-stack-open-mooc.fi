@@ -5,7 +5,6 @@ const useNotificationStore = create((set) => ({
   timeoutId: null,
   actions: {
     notify: ({ message, type, seconds = 5 }) => {
-      console.log("notify", message, type, seconds);
       if (useNotificationStore.getState().timeoutId) {
         clearTimeout(useNotificationStore.getState().timeoutId);
       }
@@ -28,3 +27,5 @@ export const useNotification = () => {
 export const useNotificationActions = () => {
   return useNotificationStore((state) => state.actions);
 };
+
+export default useNotificationStore;

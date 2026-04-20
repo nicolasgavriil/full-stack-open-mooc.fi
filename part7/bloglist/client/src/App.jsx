@@ -1,25 +1,28 @@
 import { useState, useEffect } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import { Container } from "@mui/material";
-import NavBar from "../components/NavBar.jsx";
-import Notification from "../components/Notification.jsx";
-import LoginForm from "../components/LoginForm.jsx";
-import BlogsPage from "../components/BlogsPage.jsx";
-import BlogPage from "../components/BlogPage.jsx";
-import BlogCreationForm from "../components/BlogCreationForm.jsx";
-import ErrorBoundary from "../components/ErrorBoundary.jsx";
-import loginService from "../services/login.js";
-import blogService from "../services/blogs.js";
+import NavBar from "./components/NavBar.jsx";
+import Notification from "./components/Notification.jsx";
+import LoginForm from "./components/LoginForm.jsx";
+import BlogsPage from "./components/BlogsPage.jsx";
+import BlogPage from "./components/BlogPage.jsx";
+import BlogCreationForm from "./components/BlogCreationForm.jsx";
+import ErrorBoundary from "./components/ErrorBoundary.jsx";
+import loginService from "./services/login.js";
+import blogService from "./services/blogs.js";
 import {
   useNotification,
   useNotificationActions,
-} from "../stores/notificationStore.js";
+} from "./stores/notificationStore.js";
+import { useBlogs, useBlogActions } from "./stores/blogStore.js";
 
 const App = () => {
+  const { initializeBlogs } = useBlogActions();
+  const blogs = useBlogs();
   const navigate = useNavigate();
   const notification = useNotification();
   const { notify } = useNotificationActions();
-  const [blogs, setBlogs] = useState([]);
+
   const [user, setUser] = useState(() => {
     const loggedUser = window.localStorage.getItem("loggedUser");
     return loggedUser ? JSON.parse(loggedUser) : null;
@@ -32,13 +35,8 @@ const App = () => {
   }, [user]);
 
   useEffect(() => {
-    const fetchBlogs = async () => {
-      const blogs = await blogService.getAll();
-      setBlogs(blogs);
-    };
-
-    fetchBlogs();
-  }, []);
+    initializeBlogs();
+  }, [initializeBlogs]);
 
   const handleLogin = async (username, password) => {
     try {
@@ -59,26 +57,6 @@ const App = () => {
     setUser(null);
     window.localStorage.removeItem("loggedUser");
     navigate("/blogs");
-  };
-
-  const handleCreateBlog = async (content) => {
-    try {
-      const newBlog = await blogService.create(content);
-      setBlogs(blogs.concat(newBlog));
-
-      notify({
-        message: `New blog: "${newBlog.title}" by ${newBlog.author} added`,
-        type: "success",
-      });
-      navigate("/blogs");
-    } catch (err) {
-      notify({
-        message: err.response?.data?.error || "Something went wrong",
-        type: "error",
-      });
-
-      throw err;
-    }
   };
 
   const handleLikeBlog = async (blog) => {
@@ -135,10 +113,7 @@ const App = () => {
                 />
               }
             />
-            <Route
-              path="/create"
-              element={<BlogCreationForm onCreateBlog={handleCreateBlog} />}
-            />
+            <Route path="/create" element={<BlogCreationForm />} />
             <Route
               path="/login"
               element={<LoginForm onSubmit={handleLogin} />}

@@ -1,18 +1,21 @@
 import { useState } from "react";
 import { Stack, TextField, Button } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { useBlogActions } from "../stores/blogStore.js";
 
-const BlogCreationForm = ({ onCreateBlog }) => {
+const BlogCreationForm = () => {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [url, setUrl] = useState("");
+  const navigate = useNavigate();
+  const { createBlog } = useBlogActions();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await onCreateBlog({ title, author, url });
-      setTitle("");
-      setAuthor("");
-      setUrl("");
+      await createBlog({ title, author, url });
+
+      navigate("/blogs");
     } catch {
       // Catching error to prevent form reset; App handles notification
     }
