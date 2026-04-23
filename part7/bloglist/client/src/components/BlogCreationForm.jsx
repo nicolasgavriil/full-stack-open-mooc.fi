@@ -1,20 +1,24 @@
-import { useState } from "react";
 import { Stack, TextField, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { useField } from "../hooks/useField.js";
 import { useBlogActions } from "../stores/blogStore.js";
 
 const BlogCreationForm = () => {
   const navigate = useNavigate();
   const { createBlog } = useBlogActions();
 
-  const [title, setTitle] = useState("");
-  const [author, setAuthor] = useState("");
-  const [url, setUrl] = useState("");
+  const title = useField("title", "text");
+  const author = useField("author", "text");
+  const url = useField("url", "text");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await createBlog({ title, author, url });
+      await createBlog({
+        title: title.value,
+        author: author.value,
+        url: url.value,
+      });
 
       navigate("/blogs");
     } catch (err) {
@@ -27,23 +31,11 @@ const BlogCreationForm = () => {
       <h2>Create new blog</h2>
       <form onSubmit={handleSubmit}>
         <Stack spacing={2}>
-          <TextField
-            label="title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-          />
+          <TextField {...title.props} />
 
-          <TextField
-            label="author"
-            value={author}
-            onChange={(e) => setAuthor(e.target.value)}
-          />
+          <TextField {...author.props} />
 
-          <TextField
-            label="url"
-            value={url}
-            onChange={(e) => setUrl(e.target.value)}
-          />
+          <TextField {...url.props} />
 
           <Button type="submit" variant="contained" style={{ marginTop: 15 }}>
             CREATE
