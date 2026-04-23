@@ -28,6 +28,23 @@ blogsRouter.post("/:id/likes", async (req, res) => {
   return res.status(200).json(updatedBlog);
 });
 
+blogsRouter.post("/:id/comments", async (req, res) => {
+  const { comment } = req.body;
+  if (!comment) {
+    throw new AppError("missing content", 400);
+  }
+
+  const blogId = req.params.id;
+  const blogToUpdate = await Blog.findById(blogId);
+  if (!blogToUpdate) {
+    throw new AppError("blog not found", 404);
+  }
+
+  blogToUpdate.comments.push(comment);
+  const updatedBlog = await blogToUpdate.save();
+  return res.status(200).json(updatedBlog);
+});
+
 blogsRouter.use(middleware.userExtractor);
 
 blogsRouter.post("/", async (req, res) => {

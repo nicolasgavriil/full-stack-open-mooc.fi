@@ -89,6 +89,14 @@ const BlogPage = () => {
             </Button>
           )}
         </Stack>
+        <Typography variant="h6" sx={{ fontWeight: "550", mt: 2, mb: 0.5 }}>
+          comments
+        </Typography>
+        <ul>
+          {blog.comments.map((comment) => (
+            <li key={comment}>{comment}</li>
+          ))}
+        </ul>
       </CardContent>
     </Card>
   );
