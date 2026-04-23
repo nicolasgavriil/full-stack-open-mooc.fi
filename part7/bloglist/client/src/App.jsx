@@ -12,6 +12,7 @@ import ErrorBoundary from "./components/ErrorBoundary.jsx";
 
 import { useBlogActions } from "./stores/blogStore.js";
 import { useUserActions } from "./stores/userStore.js";
+import UserPage from "./components/UserPage.jsx";
 
 const App = () => {
   const { initializeBlogs } = useBlogActions();
@@ -33,6 +34,7 @@ const App = () => {
             <Route path="/blogs" element={<BlogsPage />} />
             <Route path="/blogs/:id" element={<BlogPage />} />
             <Route path="/users" element={<UsersPage />} />
+            <Route path="/users/:id" element={<UserPage />} />
             <Route path="/create" element={<BlogCreationForm />} />
             <Route path="/login" element={<LoginForm />} />
             <Route path="*" element={<h1>404 - Page not found</h1>} />
