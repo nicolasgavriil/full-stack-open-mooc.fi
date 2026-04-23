@@ -6,20 +6,24 @@ import {
   Card,
   CardContent,
   Typography,
+  TextField,
   Button,
   Stack,
   Link,
 } from "@mui/material";
+import { useField } from "../hooks/useField.js";
 
 const BlogPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
   const user = useAuth();
-  const { likeBlog, removeBlog } = useBlogActions();
+  const { likeBlog, commentBlog, removeBlog } = useBlogActions();
   const blogs = useBlogs();
-
   const blog = blogs.find((b) => b.id === id);
+
+  const comment = useField("comment", "text");
+
   if (!blog) return null;
 
   const handleLike = async () => {
@@ -31,6 +35,15 @@ const BlogPage = () => {
       await removeBlog(blog);
       navigate("/blogs");
     }
+  };
+
+  const handleSubmit = async () => {
+    try {
+      await commentBlog(blog, comment.value);
+    } catch (err) {
+      console.log(err);
+    }
+    comment.reset();
   };
 
   return (
@@ -89,12 +102,21 @@ const BlogPage = () => {
             </Button>
           )}
         </Stack>
+
         <Typography variant="h6" sx={{ fontWeight: "550", mt: 2, mb: 0.5 }}>
           comments
         </Typography>
+
+        <Stack direction="row" spacing={1} sx={{ mb: 2 }}>
+          <TextField size="small" {...comment.props} />
+          <Button variant="contained" onClick={handleSubmit}>
+            ADD COMMENT
+          </Button>
+        </Stack>
+
         <ul>
-          {blog.comments.map((comment) => (
-            <li key={comment}>{comment}</li>
+          {blog.comments.map((comment, i) => (
+            <li key={i}>{comment}</li>
           ))}
         </ul>
       </CardContent>

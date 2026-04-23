@@ -46,6 +46,26 @@ const useBlogStore = create((set) => ({
         });
       }
     },
+
+    commentBlog: async (blog, comment) => {
+      try {
+        const updatedBlog = await blogService.comment(blog.id, comment);
+        set((state) => ({
+          blogs: state.blogs.map((b) => (b.id === blog.id ? updatedBlog : b)),
+        }));
+
+        useNotificationStore.getState().actions.notify({
+          message: `Comment published`,
+          type: "success",
+        });
+      } catch (err) {
+        useNotificationStore.getState().actions.notify({
+          message: err.response?.data?.error || "Something went wrong",
+          type: "error",
+        });
+      }
+    },
+
     removeBlog: async (blog) => {
       try {
         await blogService.remove(blog.id);
