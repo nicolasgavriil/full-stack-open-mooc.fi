@@ -1,15 +1,15 @@
-import BlogList from "./BlogList.jsx";
+import UserTable from "./UserTable.jsx";
 import { Typography } from "@mui/material";
 
-const BlogsPage = () => {
+const UsersPage = () => {
   return (
     <>
       <Typography variant="h4" sx={{ mt: 2, mb: 2 }}>
-        Blogs
+        Users
       </Typography>
-      <BlogList />
+      <UserTable />
     </>
   );
 };
 
-export default BlogsPage;
+export default UsersPage;

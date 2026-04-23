@@ -7,16 +7,20 @@ import LoginForm from "./components/LoginForm.jsx";
 import BlogsPage from "./components/BlogsPage.jsx";
 import BlogPage from "./components/BlogPage.jsx";
 import BlogCreationForm from "./components/BlogCreationForm.jsx";
+import UsersPage from "./components/UsersPage.jsx";
 import ErrorBoundary from "./components/ErrorBoundary.jsx";
 
 import { useBlogActions } from "./stores/blogStore.js";
+import { useUserActions } from "./stores/userStore.js";
 
 const App = () => {
   const { initializeBlogs } = useBlogActions();
+  const { initializeUsers } = useUserActions();
 
   useEffect(() => {
     initializeBlogs();
-  }, [initializeBlogs]);
+    initializeUsers();
+  }, [initializeBlogs, initializeUsers]);
 
   return (
     <Container>
@@ -27,8 +31,8 @@ const App = () => {
           <Routes>
             <Route path="/" element={<BlogsPage />} />
             <Route path="/blogs" element={<BlogsPage />} />
-
             <Route path="/blogs/:id" element={<BlogPage />} />
+            <Route path="/users" element={<UsersPage />} />
             <Route path="/create" element={<BlogCreationForm />} />
             <Route path="/login" element={<LoginForm />} />
             <Route path="*" element={<h1>404 - Page not found</h1>} />

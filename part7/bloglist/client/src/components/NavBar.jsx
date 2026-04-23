@@ -32,6 +32,14 @@ const NavBar = () => {
         >
           blogs
         </Button>
+        <Button
+          color="inherit"
+          component={Link}
+          to="/users"
+          sx={navButtonStyle}
+        >
+          users
+        </Button>
 
         {user && (
           <Button
