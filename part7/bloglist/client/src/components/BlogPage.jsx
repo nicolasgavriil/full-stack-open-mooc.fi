@@ -10,6 +10,9 @@ import {
   Button,
   Stack,
   Link,
+  List,
+  ListItem,
+  ListItemText,
 } from "@mui/material";
 import { useField } from "../hooks/useField.js";
 
@@ -107,18 +110,22 @@ const BlogPage = () => {
           comments
         </Typography>
 
-        <Stack direction="row" spacing={1} sx={{ mb: 2 }}>
-          <TextField size="small" {...comment.props} />
-          <Button variant="contained" onClick={handleSubmit}>
-            ADD COMMENT
-          </Button>
-        </Stack>
+        {user && (
+          <Stack direction="row" spacing={1} sx={{ mb: 2 }}>
+            <TextField size="small" {...comment.props} />
+            <Button variant="contained" onClick={handleSubmit}>
+              ADD COMMENT
+            </Button>
+          </Stack>
+        )}
 
-        <ul>
-          {blog.comments.map((comment, i) => (
-            <li key={i}>{comment}</li>
+        <List dense disablePadding sx={{ listStyleType: "disc", pl: 3 }}>
+          {blog.comments.map((c, i) => (
+            <ListItem key={i} sx={{ display: "list-item", pl: 0 }}>
+              <ListItemText primary={c} />
+            </ListItem>
           ))}
-        </ul>
+        </List>
       </CardContent>
     </Card>
   );

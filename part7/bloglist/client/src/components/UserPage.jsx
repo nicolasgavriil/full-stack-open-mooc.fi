@@ -1,5 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useUsers } from "../stores/userStore.js";
+import { Typography, List, ListItem, ListItemText } from "@mui/material";
 
 const UserPage = () => {
   const users = useUsers();
@@ -10,13 +11,19 @@ const UserPage = () => {
 
   return (
     <>
-      <h2>{user.name} </h2>
-      <h3>Added blogs:</h3>
-      <ul>
+      <Typography variant="h5" sx={{ mt: 2, mb: 1 }}>
+        {user.name}
+      </Typography>
+      <Typography variant="h6" sx={{ mb: 1 }}>
+        Added blogs
+      </Typography>
+      <List dense disablePadding sx={{ listStyleType: "disc", pl: 2 }}>
         {user.blogs.map((blog) => (
-          <li key={blog.id}>{blog.title} </li>
+          <ListItem key={blog.id} sx={{ display: "list-item", pl: 0 }}>
+            <ListItemText primary={blog.title} />
+          </ListItem>
         ))}
-      </ul>
+      </List>
     </>
   );
 };
